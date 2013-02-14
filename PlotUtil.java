@@ -16,14 +16,10 @@ public class PlotUtil{
 
     //Initialise the array with the values from a file
     public static double[][] data(double[][] data, Scanner scan){
-
         for (int i=0;i<data.length-1;i++){
             for (int j=0;j<data[0].length;j++){
                 data[i][j] = (float)   IOUtil.skipToDouble(scan);
-                //           System.out.printf("%5.2f ",data[i][j]);
             }
-            //    System.out.println();
-
         }
         return data;
     }
@@ -48,7 +44,7 @@ public class PlotUtil{
     public static double xVariance(double[][] data){
 
 
-        double sumX = 0.0, sumY = 0.0;
+        double sumX = 0.0;
 
         for (int i=0;i<data.length;i++){
 
@@ -63,7 +59,7 @@ public class PlotUtil{
 
         for (int i=0;i<data.length;i++){
 
-            sumY  += data[0][i];
+            sumY  += data[i][1];
         }
         return sumY / data.length;
     }
@@ -73,7 +69,7 @@ public class PlotUtil{
 
         //works out the difference of least squares fit
         for (int i = 0; i < data.length; i++) {
-            covariance += (data[i][0] - xVariance) * (data[0][i] - yVariance);
+            covariance += (data[i][0] - xVariance) * (data[i][1] - yVariance);
         }
         return covariance;
     }
@@ -94,7 +90,7 @@ public class PlotUtil{
 
         //works out the difference of least squares fit
         for (int i = 0; i < data.length; i++) {
-            yyVariance += (data[0][i] - yVariance) * (data[0][i] - yVariance);
+            yyVariance += (data[i][1] - yVariance) * (data[i][1] - yVariance);
         }
         return yyVariance;
     }
@@ -102,7 +98,7 @@ public class PlotUtil{
 
         return covariance / xxVariance;//linear correlation coefficient
     }
-    public static double yIntercept(double yVariance, double xVariance, double gradient){
+    public static double yIntercept(double xVariance, double yVariance, double gradient){
         return yVariance - gradient * xVariance;
     }
     public static double[] fit(double[][] data, double gradient, double offset){
@@ -117,7 +113,7 @@ public class PlotUtil{
 
         double rss = 0.0;  //standard error in mean i.e. residual sum of squares
         for (int i = 0; i < data.length; i++)
-            rss += (fit[i] - data[0][i]) * (fit[i] - data[0][i]);
+            rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
         return rss;
     }
     //Regression sum of squares.
@@ -128,11 +124,11 @@ public class PlotUtil{
         }
         return ssr;
     }
-    public static double[] residuals(double residual, double[][] data, double[] fit){
+    public static double[] residuals(double[][] data, double[] fit){
 
         double[] residuals=new double[data.length];
         for (int i = 0; i < data.length; i++)
-            residuals[i] =data[0][i]- fit[i];
+            residuals[i] =data[i][1]- fit[i];
         return residuals;
     }
     //Returns the linear corrilation coefficient

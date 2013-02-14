@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class Analyser {
         BufferedReader mg=new BufferedReader(new FileReader("mercury01feb.asc"));
 
         PrintWriter upPeaksFile = new PrintWriter("peaksUp");
+        PrintWriter residualsFile = new PrintWriter("residuals");
         Scanner scanCd = new Scanner(cd);
         Scanner scanZn = new Scanner(zn);
         Scanner scanK = new Scanner(k);
@@ -33,10 +35,12 @@ public class Analyser {
 
         //Read elements from files
         dataCd = PlotUtil.data(dataCd,scanCd);
+
         dataZn = PlotUtil.data(dataZn,scanZn);
         dataK = PlotUtil.data(dataK,scanK);
         dataNa = PlotUtil.data(dataNa,scanNa);
         dataHg= PlotUtil.data(dataHg,scanHg);
+
         writePeaksUp("cd ", dataCd, upPeaksFile);
         writePeaksUp("zn ", dataZn, upPeaksFile);
         writePeaksUp("k ", dataK, upPeaksFile);
@@ -44,8 +48,35 @@ public class Analyser {
         writePeaksUp("Hg ", dataHg, upPeaksFile);
         upPeaksFile.close();
 
-
     }
+    //put the real value
+    public static void calculateStuff(double[][] data, PrintWriter out){
+
+        double xVar =  PlotUtil.xVariance(data);
+        double yVar =  PlotUtil.yVariance(data);
+
+        double covariance = PlotUtil.covariance(xVar, yVar, data);
+        double xxVar =PlotUtil.xxVariance(xVar, data);
+        double yyVar =PlotUtil.yyVariance(yVar, data);
+
+        double gradient=PlotUtil.gradient(covariance, xxVar);
+
+        double offset = PlotUtil.yIntercept(xVar, yVar, gradient);
+
+        //In this calculation the fit is actually the values which are writen in the NIST database.
+       // double[] fit = PlotUtil.fit(data, gradient,offset);
+         double[] fit;  //Get expectation values from a file or type in the keyboard manually TODO
+
+        //Write to file once you have verified the right stuff is happeneing.
+
+      //  double[] residuals = PlotUtil.residuals(data, fit);
+
+   //     for(int i = 0; i < data.length; i++){
+      //     System.out.printf(" %g %g", data[i][0], residuals[i]);
+      //     System.out.println();
+     //   }
+    }
+
     public static void writePeaksUp(String label, double[][] data, PrintWriter upFile){
         double largeUp=0.0;
 
