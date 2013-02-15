@@ -17,7 +17,7 @@ public class Analyser {
     //    BufferedReader zn=new BufferedReader(new FileReader("Z03.asc"));
     //    BufferedReader k=new BufferedReader(new FileReader("K.asc"));
      //   BufferedReader na=new BufferedReader(new FileReader("Na04.asc"));
-        BufferedReader hg=new BufferedReader(new FileReader("Hg05.asc"));       
+        BufferedReader hg=new BufferedReader(new FileReader("Hg04.asc"));       
         BufferedReader hgModel=new BufferedReader(new FileReader("ModelHg.asc"));
 
    //   PrintWriter upPeaksFile = new PrintWriter("peaksUp");
@@ -27,7 +27,6 @@ public class Analyser {
         Scanner scanZn = new Scanner(zn);
         Scanner scanK = new Scanner(k);
         Scanner scanNa = new Scanner(na);*/
-        Scanner scanHg = new Scanner(hg);
         
         Scanner scanModelHg = new Scanner(hgModel);
 
@@ -84,6 +83,7 @@ public class Analyser {
 
         //Write to file once you have verified the right stuff is happeneing.
 				double[] residuals = PlotUtil.xResiduals(data, modelData);
+			double[] residuals = PlotUtil.xResiduals(data, modelData);
 
         for(int i = 0; i < data.length; i++){
            System.out.printf(" %g %g", data[i][1], residuals[i]);
@@ -116,26 +116,10 @@ public class Analyser {
         System.out.println();
     }
     public static void peaks(double[][] data, PrintWriter peakFile){
-        double largeUp=0.0;
-
+    
+        double peak=0.0;
         for(int i=0; i<data.length; i++){
-
-                if(data[i][1]<largeUp){
-
-                    largeUp = data[i][1];
-
-                    System.out.printf("%2.2f %2.2f ",data[i][0], largeUp);
-                    System.out.println();
-
-                    //set some sort of minimum
-                    if(largeUp==100){
-
-                        //reset
-                        largeUp=0;
-                    }
-            //    }
-            }
-
+        
         }
     }
     //This is to make it possible to analyse the curves linearly.
