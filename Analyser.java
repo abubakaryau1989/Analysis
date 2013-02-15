@@ -12,20 +12,24 @@ public class Analyser {
      //   String fileName = IOUtil.typedInput();
         int max=1729;
      //   System.out.printf(" Found file %s", fileName);
+//
+    //    BufferedReader cd=new BufferedReader(new FileReader("Cd04.asc"));
+    //    BufferedReader zn=new BufferedReader(new FileReader("Z03.asc"));
+    //    BufferedReader k=new BufferedReader(new FileReader("K.asc"));
+     //   BufferedReader na=new BufferedReader(new FileReader("Na04.asc"));
+        BufferedReader hg=new BufferedReader(new FileReader("Hg05.asc"));       
+        BufferedReader hgModel=new BufferedReader(new FileReader("ModelHg.asc"));
 
-        BufferedReader cd=new BufferedReader(new FileReader("Cd04.asc"));
-        BufferedReader zn=new BufferedReader(new FileReader("Z03.asc"));
-        BufferedReader k=new BufferedReader(new FileReader("K.asc"));
-        BufferedReader na=new BufferedReader(new FileReader("Na04.asc"));
-        BufferedReader mg=new BufferedReader(new FileReader("mercury01feb.asc"));
-
-        PrintWriter upPeaksFile = new PrintWriter("peaksUp");
+   //   PrintWriter upPeaksFile = new PrintWriter("peaksUp");
         PrintWriter residualsFile = new PrintWriter("residuals");
-        Scanner scanCd = new Scanner(cd);
+        PrintWriter peaksHgFile = new PrintWriter("peaksHg");
+    /*  Scanner scanCd = new Scanner(cd);
         Scanner scanZn = new Scanner(zn);
         Scanner scanK = new Scanner(k);
-        Scanner scanNa = new Scanner(na);
-        Scanner scanHg = new Scanner(mg);
+        Scanner scanNa = new Scanner(na);*/
+        Scanner scanHg = new Scanner(hg);
+        
+        Scanner scanModelHg = new Scanner(hgModel);
 
         double dataCd[][] = new double[max][2];
         double dataZn[][] = new double[max][2];
@@ -34,23 +38,34 @@ public class Analyser {
         double dataHg[][] = new double[max][2];
 
         //Read elements from files
-        dataCd = PlotUtil.data(dataCd,scanCd);
 
+				
+				
+				//Initialise arrays for experimental data by reading X and Y data from the files
+		    /*dataCd = PlotUtil.data(dataHg,scanHg);
         dataZn = PlotUtil.data(dataZn,scanZn);
         dataK = PlotUtil.data(dataK,scanK);
-        dataNa = PlotUtil.data(dataNa,scanNa);
+        dataNa = PlotUtil.data(dataNa,scanNa);*/
         dataHg= PlotUtil.data(dataHg,scanHg);
 
-        writePeaksUp("cd ", dataCd, upPeaksFile);
+        int modelSampleNo=IOUtil.skipToInt(scanModelHg);
+        
+      	 	double[] modelHg = new double[modelSampleNo];
+       	modelHg = PlotUtil.data(modelHg,scanModelHg);
+  				peaks(dataHg,peaksHgFile);
+  				peaksHgFile.close();
+
+   /*     writePeaksUp("cd ", dataCd, upPeaksFile);
         writePeaksUp("zn ", dataZn, upPeaksFile);
         writePeaksUp("k ", dataK, upPeaksFile);
-        writePeaksUp("na ", dataNa, upPeaksFile);
-        writePeaksUp("Hg ", dataHg, upPeaksFile);
-        upPeaksFile.close();
+        writePeaksUp("na ", dataNa, upPeaksFile);*/
+       // writePeaksUp("Hg ", dataHg, upPeaksFile);
+      //  upPeaksFile.close();
+   //   calculateStuff(sampledHg, modelHg, residualsFile);
 
     }
     //put the real value
-    public static void calculateStuff(double[][] data, PrintWriter out){
+    public static void calculateStuff(double[][] data, double[] modelData, PrintWriter out){
 
         double xVar =  PlotUtil.xVariance(data);
         double yVar =  PlotUtil.yVariance(data);
@@ -64,17 +79,16 @@ public class Analyser {
         double offset = PlotUtil.yIntercept(xVar, yVar, gradient);
 
         //In this calculation the fit is actually the values which are writen in the NIST database.
-       // double[] fit = PlotUtil.fit(data, gradient,offset);
-         double[] fit;  //Get expectation values from a file or type in the keyboard manually TODO
+
+
 
         //Write to file once you have verified the right stuff is happeneing.
+				double[] residuals = PlotUtil.xResiduals(data, modelData);
 
-      //  double[] residuals = PlotUtil.residuals(data, fit);
-
-   //     for(int i = 0; i < data.length; i++){
-      //     System.out.printf(" %g %g", data[i][0], residuals[i]);
-      //     System.out.println();
-     //   }
+        for(int i = 0; i < data.length; i++){
+           System.out.printf(" %g %g", data[i][1], residuals[i]);
+           System.out.println();
+        }
     }
 
     public static void writePeaksUp(String label, double[][] data, PrintWriter upFile){
@@ -100,24 +114,18 @@ public class Analyser {
 
         }
         System.out.println();
-
     }
-
-    public static void writePeaks(double[][] data, PrintWriter upFile){
+    public static void peaks(double[][] data, PrintWriter peakFile){
         double largeUp=0.0;
 
+        for(int i=0; i<data.length; i++){
 
-        for(int i=0; i<data.length-1; i++){
+                if(data[i][1]<largeUp){
 
-            //Check that there has been an initial increase
-            if(data[i][1]>data[0][1]){
-
-                //if so check that  it's significant
-                if(data[i][1]>largeUp){
                     largeUp = data[i][1];
 
-                    upFile.printf("%2.2f %2.2f ",data[i][0], largeUp);
-                    upFile.println();
+                    System.out.printf("%2.2f %2.2f ",data[i][0], largeUp);
+                    System.out.println();
 
                     //set some sort of minimum
                     if(largeUp==100){
@@ -125,8 +133,9 @@ public class Analyser {
                         //reset
                         largeUp=0;
                     }
-                }
+            //    }
             }
+
         }
     }
     //This is to make it possible to analyse the curves linearly.

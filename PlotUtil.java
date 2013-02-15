@@ -23,6 +23,13 @@ public class PlotUtil{
         }
         return data;
     }
+    
+    public static double[] data(double[] data, Scanner scan){
+        for (int i=0;i<data.length;i++){
+          data[i] = IOUtil.skipToDouble(scan);
+        }
+        return data;
+    }
     //Returns the x component of a 2D array
     public static double[] x(double[][] data){
         double[] x = new double[data.length];
@@ -41,17 +48,16 @@ public class PlotUtil{
         }
         return y;
     }
+    //Variance in x
     public static double xVariance(double[][] data){
-
-
+    
         double sumX = 0.0;
-
         for (int i=0;i<data.length;i++){
-
             sumX  += data[i][0];
         }
         return sumX / data.length;
     }
+    //variance in y 
     public static double yVariance(double[][] data){
 
 
@@ -63,11 +69,13 @@ public class PlotUtil{
         }
         return sumY / data.length;
     }
+    //covariance 
+   //works out the difference of least squares fit
     public static double covariance(double xVariance, double yVariance, double[][] data){
 
         double covariance=0.0;
 
-        //works out the difference of least squares fit
+
         for (int i = 0; i < data.length; i++) {
             covariance += (data[i][0] - xVariance) * (data[i][1] - yVariance);
         }
@@ -101,19 +109,35 @@ public class PlotUtil{
     public static double yIntercept(double xVariance, double yVariance, double gradient){
         return yVariance - gradient * xVariance;
     }
-    public static double[] fit(double[][] data, double gradient, double offset){
+    public static double[] linearFit(double[][] data, double gradient, double offset){
         double[] fit=new double[data.length];
         for(int i=0; i<data.length; i++)
             fit[i] = gradient*data[i][0] + offset;
         return fit;
     }
+    	public static double stdVariation(double rss, double degreesFreedom){
+    	        return rss / degreesFreedom;
+    }
 
-    // Residual Sum of Squares.
-    public static double rss(double[][] data, double[] fit){
+    public static double stdFit(double[][] data, double xVariance, double errorGradient, double stdVar){
+
+        return stdVar/data.length + xVariance*xVariance*Math.sqrt(errorGradient);
+    }
+
+    // Residual Sum of Squares for the y axis.
+    public static double yRss(double[][] data, double[] fit){
 
         double rss = 0.0;  //standard error in mean i.e. residual sum of squares
         for (int i = 0; i < data.length; i++)
             rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
+        return rss;
+    }
+        // Residual Sum of Squares for the y axis.
+    public static double xRss(double[][] data, double[] fit){
+
+        double rss = 0.0;  //standard error in mean i.e. residual sum of squares
+        for (int i = 0; i < data.length; i++)
+            rss += (fit[i] - data[i][0]) * (fit[i] - data[i][0]);
         return rss;
     }
     //Regression sum of squares.
@@ -124,11 +148,11 @@ public class PlotUtil{
         }
         return ssr;
     }
-    public static double[] residuals(double[][] data, double[] fit){
+    public static double[] xResiduals(double[][] data, double[] xFit){
 
-        double[] residuals=new double[data.length];
+        double[] residuals=new double[xFit.length];
         for (int i = 0; i < data.length; i++)
-            residuals[i] =data[i][1]- fit[i];
+            residuals[i] =data[i][0] - xFit[i];
         return residuals;
     }
     //Returns the linear corrilation coefficient
@@ -163,19 +187,19 @@ public class PlotUtil{
         }
         return gaussian;
     }
+    // Static method.
+    // normally let dataG be a normalised gaussian this convolves it with the data
+    // returns the convolution as an array.
+    public static double[][] convolve(int[][] dataF, double[] dataG, int sampleNumber){
 
-    //Static method to take in a normalised gaussian and convolve it with the data
-    // returns the convolution as a 2D array.
-    public static double[][] convolve(int[][] data, double[] gaussian, int sampleNumber){
-
-
-        double convolved[][] = new double[data.length - (sampleNumber + 1)][2];
+        double convolved[][] = new double[dataF.length - (sampleNumber + 1)][2];
         for (int i=0; i<convolved.length; i++){
             convolved[i][1] = 0.0;  // Set all doubles to 0.
             for (int j=i, k=0; j<i+sampleNumber; j++, k++){
-                convolved[i][1] +=  data[j][i] * gaussian[k];
+                convolved[i][1] +=  dataF[j][i] * dataG[k];
             }
         }
         return convolved;
     }
 }
+
