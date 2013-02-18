@@ -1,32 +1,35 @@
 /*****
  *
  *
- * This is the utility for data analysis
+ * This is a utility for data analysis
  *
- * Composed soley of static methods, it
+ * For reading and writing files so they can be plotted using pgfplots or similar
+ *
+ * Composed entirely of static methods.
+ *
+ * By Magdalen Berns
  *
  *
  *
  */
-
-
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class PlotUtil{
 
     //Initialise the array with the values from a file
     public static double[][] data(double[][] data, Scanner scan){
-        for (int i=0;i<data.length-1;i++){
+        for (int i=0;i<data.length;i++){
             for (int j=0;j<data[0].length;j++){
-                data[i][j] = (float)   IOUtil.skipToDouble(scan);
+                data[i][j] = (float) IOUtil.skipToDouble(scan);
             }
         }
         return data;
     }
-    
+
     public static double[] data(double[] data, Scanner scan){
         for (int i=0;i<data.length;i++){
-          data[i] = IOUtil.skipToDouble(scan);
+            data[i] = IOUtil.skipToDouble(scan);
         }
         return data;
     }
@@ -40,7 +43,7 @@ public class PlotUtil{
         return x;
     }
     //Returns the y component of a 2D array
-    public static double[]  y(double[][] data){
+    public static double[] y(double[][] data){
         double[] y = new double[data.length];
 
         for (int i=0;i<data.length;i++){
@@ -48,158 +51,81 @@ public class PlotUtil{
         }
         return y;
     }
-    //Variance in x
-    public static double xVariance(double[][] data){
-    
-        double sumX = 0.0;
-        for (int i=0;i<data.length;i++){
-            sumX  += data[i][0];
+    public static void writeXY(double[] x, double[] y, PrintWriter fileOut){
+        for(int i=0; i<y.length;i++){
+            fileOut.printf("%2.2f %2.2f", x[i],y[i]);
+            fileOut.println();
         }
-        return sumX / data.length;
     }
-    //variance in y 
-    public static double yVariance(double[][] data){
+    public static void calibratedXY(double[] x, double[] y, PrintWriter fileOut, double[] amount){
+        double[] calibrate = new double[x.length];
+        for(int i=0; i<y.length;i++){
+            System.out.println(amount[i]);
+            calibrate[i]+= x[i]-amount[i];
 
-
-        double sumY = 0.0;
-
-        for (int i=0;i<data.length;i++){
-
-            sumY  += data[i][1];
+            fileOut.printf("%2.2f %2.2f",calibrate[i] ,y[i]);
+            fileOut.println();
         }
-        return sumY / data.length;
     }
-    //covariance 
-   //works out the difference of least squares fit
-    public static double covariance(double xVariance, double yVariance, double[][] data){
+    public static void peaksUp(double[][] data, PrintWriter upFile, double minValue){
+        double largeUp=0.0;
 
-        double covariance=0.0;
+        for(int i=0; i<data.length-1; i++){
 
+            //Check that there has been an initial increase
+            if(data[i][1]>data[0][1]){
 
-        for (int i = 0; i < data.length; i++) {
-            covariance += (data[i][0] - xVariance) * (data[i][1] - yVariance);
-        }
-        return covariance;
-    }
-    public static double xxVariance(double xVariance, double[][] data){
+                //if so check that it's significant
+                if(data[i][1]>largeUp && data[i][1] > minValue){
+                    largeUp = data[i][1];
 
-        double xxVariance=0.0;
+                    System.out.printf("%2.2f ",data[i][0]);
 
-        //works out the difference of least squares fit
-        for (int i = 0; i < data.length; i++) {
-            xxVariance += (data[i][0] - xVariance) * (data[i][0] - xVariance);
+                    upFile.printf("%2.2f %2.2f ",data[i][0], largeUp);
+                    upFile.println();
 
-        }
-        return xxVariance;
-    }
-    public static double yyVariance(double yVariance, double[][] data){
-
-        double yyVariance=0.0;
-
-        //works out the difference of least squares fit
-        for (int i = 0; i < data.length; i++) {
-            yyVariance += (data[i][1] - yVariance) * (data[i][1] - yVariance);
-        }
-        return yyVariance;
-    }
-    public static double gradient(double covariance, double xxVariance){
-
-        return covariance / xxVariance;//linear correlation coefficient
-    }
-    public static double yIntercept(double xVariance, double yVariance, double gradient){
-        return yVariance - gradient * xVariance;
-    }
-    public static double[] linearFit(double[][] data, double gradient, double offset){
-        double[] fit=new double[data.length];
-        for(int i=0; i<data.length; i++)
-            fit[i] = gradient*data[i][0] + offset;
-        return fit;
-    }
-    	public static double stdVariation(double rss, double degreesFreedom){
-    	        return rss / degreesFreedom;
-    }
-
-    public static double stdFit(double[][] data, double xVariance, double errorGradient, double stdVar){
-
-        return stdVar/data.length + xVariance*xVariance*Math.sqrt(errorGradient);
-    }
-
-    // Residual Sum of Squares for the y axis.
-    public static double yRss(double[][] data, double[] fit){
-
-        double rss = 0.0;  //standard error in mean i.e. residual sum of squares
-        for (int i = 0; i < data.length; i++)
-            rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
-        return rss;
-    }
-        // Residual Sum of Squares for the y axis.
-    public static double xRss(double[][] data, double[] fit){
-
-        double rss = 0.0;  //standard error in mean i.e. residual sum of squares
-        for (int i = 0; i < data.length; i++)
-            rss += (fit[i] - data[i][0]) * (fit[i] - data[i][0]);
-        return rss;
-    }
-    //Regression sum of squares.
-    public static double ssr(double[][] data, double[] fit, double yVariance) {
-        double ssr = 0.0;  // regression sum of squares
-        for (int i = 0; i < data.length; i++){
-            ssr += (fit[i] - yVariance) * (fit[i] - yVariance);
-        }
-        return ssr;
-    }
-    public static double[] xResiduals(double[][] data, double[] xFit){
-
-        double[] residuals=new double[xFit.length];
-        for (int i = 0; i < data.length; i++)
-            residuals[i] =data[i][0] - xFit[i];
-        return residuals;
-    }
-    //Returns the linear corrilation coefficient
-    public static double linearCC(double ssr, double yyVariance){
-        return ssr/yyVariance;
-    }
-    //Assumes that data has only 2 degrees of freedom TODO develop later.
-    public static double stdFit(double rss,double[][] data, double xVariance, double errorGradient) {
-
-        double degreesFreedom=2;
-        double stdVar  = rss / degreesFreedom;
-        return stdVar/data.length + xVariance*xVariance*Math.sqrt(errorGradient);
-    }
-
-    public static double errorGradient(double stdVariation, double xxVariance){
-
-        return Math.sqrt(stdVariation/ xxVariance);
-    }
-
-    public static double[] gaussian(int sampleNumber, double sigma, double mean){
-
-        //instantiate and initialise an array to hold Gaussian
-        double[] gaussian = new double[sampleNumber];
-        double temp= 0.0;
-        for (int i=0; i<sampleNumber; i++){
-            gaussian[i] = (1/(2*Math.PI*sigma*sigma))*(Math.exp(-(i-mean)*(i-mean)/(2*sigma*sigma)));
-            temp += gaussian[i];
-        }
-        //Normalize the gaussian
-        for (int i=0; i<sampleNumber; i++){
-            gaussian[i] /= temp;
-        }
-        return gaussian;
-    }
-    // Static method.
-    // normally let dataG be a normalised gaussian this convolves it with the data
-    // returns the convolution as an array.
-    public static double[][] convolve(int[][] dataF, double[] dataG, int sampleNumber){
-
-        double convolved[][] = new double[dataF.length - (sampleNumber + 1)][2];
-        for (int i=0; i<convolved.length; i++){
-            convolved[i][1] = 0.0;  // Set all doubles to 0.
-            for (int j=i, k=0; j<i+sampleNumber; j++, k++){
-                convolved[i][1] +=  dataF[j][i] * dataG[k];
+                }
             }
         }
-        return convolved;
+        System.out.println();
+    }
+    //Work out the minimum value from the SNR (Signal to Noise ratio)
+    public static void peaks(double[][] data, PrintWriter peakFile, double minValue){
+        double peaks=0.0;
+
+        //loop through data
+        for(int i=0; i<data.length; i++){
+
+            //Check that there has been an initial increase and that it is bigger than 2.8%
+            if(data[i][1]>data[0][1] && data[i][1]>minValue){
+
+                //if so check that it's significant  enough to bother
+                if(data[i][1]>peaks){
+                    peaks = data[i][1];
+                    peakFile.printf("%2.2f %2.2f ",data[i][0], peaks);
+                    peakFile.println();
+                }
+            }
+            //When the peak has reached its highest point
+            else if(data[i][1]<peaks){
+                //reset
+                peaks=0;
+            }
+        }
+    }
+    //Unsorted. TODO
+    public static void writePeaksDown(double[][] data, PrintWriter downFile){
+        double largeDown=0.0;
+
+        for(int i=data.length-1; i>=0; i--){
+
+            if(data[i][1]>largeDown){
+
+                largeDown=data[i][1];
+                double xPos = data[i][0];
+                downFile.printf("%2.2f %2.2f ",xPos,largeDown);
+                downFile.println();
+            }
+        }
     }
 }
-
