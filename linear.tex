@@ -1,0 +1,31 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{tikz}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[ /pgf/number format/.cd,  y tick label style={/pgf/number format/.cd,%
+          scaled y ticks = false,
+          set thousands separator={},
+          fixed}, xlabel={Resonant Magnetic Field [mTesla]}, ylabel={Resonant Frequency [kHz]}]
+
+\addplot[mark size=0.5, only marks,
+      error bars/.cd,
+        y dir=both, y explicit,
+        x dir=both, x explicit
+      ]
+   table [x error index=3, y error index=4]
+   {data_glycerin.txt};
+   \addplot[mark size = 0.5, only marks,color=black]
+    table [x index = 0, y index= 1]
+    {data_glycerin.txt}; 
+    \addplot[no markers,color=blue]
+    table [x index = 0, y index= 2]
+    {data_glycerin.txt}; 
+       \addlegendentry{\hspace{-.6cm}$42.9(6)B_{0}-$}
+
+\end{axis}
+\end{tikzpicture}
+
+\end{document}

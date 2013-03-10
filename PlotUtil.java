@@ -1,17 +1,23 @@
-/*****
- *
- *
- * This is a utility for data analysis
- *
- * For reading and writing files so they can be plotted using pgfplots or similar
- *
- * Composed entirely of static methods.
- *
- * By Magdalen Berns
- *
- *
- *
- */
+/*
+    This is a utility for plotting
+    For reading and writing files so they can be plotted using pgfplots or similar
+    Composed entirely of static methods
+    
+    Copyright (C) 2013  Magdalen Berns
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -22,11 +28,30 @@ public class PlotUtil{
         for (int i=0;i<data.length;i++){
             for (int j=0;j<data[0].length;j++){
                 data[i][j] = (float) IOUtil.skipToDouble(scan);
+
             }
         }
         return data;
     }
+    public static double[][] param(double[][] data,double param, int index){
+        for (int i=0;i<data.length;i++){
+          for (int j=0;j<data[0].length;j++){
+          		if(j!=1){
+               data[i][j] = data[i][j] * param;              
 
+          		}
+          }
+        }
+        return data;
+    }
+    //can multiply by a parameter (eg.if changing units.)
+    public static double[] param(double[] data, double param){
+    		
+    		for (int i=0;i<data.length;i++){
+        data[i] = data[i] * param;           
+      }
+      return data;
+    }
     public static double[] data(double[] data, Scanner scan){
         for (int i=0;i<data.length;i++){
             data[i] = IOUtil.skipToDouble(scan);
@@ -57,6 +82,21 @@ public class PlotUtil{
             fileOut.println();
         }
     }
+        //Will write to file all needed columns 
+    public static void writeXYwithError(double[] x, double[] y, double error, PrintWriter fileOut){
+        for(int i=0; i<y.length;i++){
+            fileOut.printf("%2.2f %2.2f %2.2f", x[i], y[i], error);
+            fileOut.println();
+        }
+    }
+
+    //Will write to file all needed columns 
+   public static void writeXYwithErrorsAndFit(double[] x, double[] y, double[] fit, double xError, double yError, PrintWriter fileOut){
+        for(int i=0; i<y.length;i++){
+            fileOut.printf("%2.2f %2.2f %2.2f %2.2f %2.2f", x[i], y[i], fit[i], xError, yError);
+            fileOut.println();
+        }
+    }
     public static void calibratedXY(double[] x, double[] y, PrintWriter fileOut, double[] amount){
         double[] calibrate = new double[x.length];
         for(int i=0; i<y.length;i++){
@@ -68,6 +108,7 @@ public class PlotUtil{
         }
     }
     public static void peaksUp(double[][] data, PrintWriter upFile, double minValue){
+    
         double largeUp=0.0;
 
         for(int i=0; i<data.length-1; i++){
@@ -77,13 +118,11 @@ public class PlotUtil{
 
                 //if so check that it's significant
                 if(data[i][1]>largeUp && data[i][1] > minValue){
+                
                     largeUp = data[i][1];
-
                     System.out.printf("%2.2f ",data[i][0]);
-
                     upFile.printf("%2.2f %2.2f ",data[i][0], largeUp);
                     upFile.println();
-
                 }
             }
         }
@@ -96,7 +135,7 @@ public class PlotUtil{
         //loop through data
         for(int i=0; i<data.length; i++){
 
-            //Check that there has been an initial increase and that it is bigger than 2.8%
+            //Check that there has been an initial increase and that it is bigger than minvalue
             if(data[i][1]>data[0][1] && data[i][1]>minValue){
 
                 //if so check that it's significant  enough to bother
@@ -113,19 +152,19 @@ public class PlotUtil{
             }
         }
     }
-    //Unsorted. TODO
+    //Unsorted. 
     public static void writePeaksDown(double[][] data, PrintWriter downFile){
-        double largeDown=0.0;
+    
+      double largeDown=0.0;
+      for(int i=data.length-1; i>=0; i--){
 
-        for(int i=data.length-1; i>=0; i--){
+          if(data[i][1]>largeDown){
 
-            if(data[i][1]>largeDown){
-
-                largeDown=data[i][1];
-                double xPos = data[i][0];
-                downFile.printf("%2.2f %2.2f ",xPos,largeDown);
-                downFile.println();
-            }
-        }
-    }
-}
+              largeDown=data[i][1];
+              double xPos = data[i][0];
+              downFile.printf("%2.2f %2.2f ",xPos,largeDown);
+              downFile.println();
+          }
+      }
+  }
+ }

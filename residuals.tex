@@ -1,0 +1,29 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{tikz}
+\usepackage{siunitx}
+\pgfplotsset{compat=1.5.1}
+
+\begin{document}
+
+
+\begin{tikzpicture}
+\begin{axis}[    yticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=1]{\pgfmathresult}}, xlabel={Resonant Magnetic Field [mT]}, ylabel={Residuals [kHz]}]
+
+\addplot[mark size=0.5, only marks,
+      error bars/.cd,
+        y dir=both, y explicit,
+      ]
+   table [y error index=2]
+   {residuals_glycerin.txt};
+   \addplot[mark size = 0.5, only marks,color=black]
+    table [x index = 0, y index= 1]
+    {residuals_glycerin.txt}; 
+    \draw[ultra thin,gray] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0); 
+
+\end{axis}
+\end{tikzpicture}
+
+
+\end{document}
