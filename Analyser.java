@@ -118,7 +118,7 @@ public class Analyser {
 			
 			
 			
-			System.out.printf("\nGyromagnetic ratio= %2.4f k/(sT) literature value = %2.4f k/(sT) and difference %2.4f mu/(sT) and error %2.4f k/(sT) ", gyromagnetic, litVal, difference,relativeErrorGyro);
+			System.out.printf("\nGyromagnetic ratio= %2.4f k/(sT) literature value = %2.4f k/(sT) and difference %2.4f k/(sT) and error %2.4f k/(sT) ", gyromagnetic, litVal, difference,relativeErrorGyro);
 			System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
 			System.out.printf("\nLinear Correlation Coefficient %g \n", linearCorrelationCoefficient);			
 
