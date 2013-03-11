@@ -24,11 +24,11 @@ import java.util.Scanner;
 public class PlotUtil{
 
     //Initialise the array with the values from a file
-    public static double[][] data(double[][] data, Scanner scan){
+    public static double[][] data2D(Scanner scan, int length){
+    			double[][] data = new double[length][2];
         for (int i=0;i<data.length;i++){
             for (int j=0;j<data[0].length;j++){
                 data[i][j] = (float) IOUtil.skipToDouble(scan);
-
             }
         }
         return data;
@@ -52,7 +52,8 @@ public class PlotUtil{
       }
       return data;
     }
-    public static double[] data(double[] data, Scanner scan){
+    public static double[] data1D(Scanner scan, int length){
+    			double[] data=new double[length];
         for (int i=0;i<data.length;i++){
             data[i] = IOUtil.skipToDouble(scan);
         }
@@ -78,14 +79,14 @@ public class PlotUtil{
     }
     public static void writeXY(double[] x, double[] y, PrintWriter fileOut){
         for(int i=0; i<y.length;i++){
-            fileOut.printf("%2.2f %2.2f", x[i],y[i]);
+            fileOut.printf("%2.5f %2.5f", x[i],y[i]);
             fileOut.println();
         }
     }
         //Will write to file all needed columns 
     public static void writeXYwithError(double[] x, double[] y, double error, PrintWriter fileOut){
         for(int i=0; i<y.length;i++){
-            fileOut.printf("%2.2f %2.2f %2.2f", x[i], y[i], error);
+            fileOut.printf("%2.5f %2.5f %2.5f", x[i], y[i], error);
             fileOut.println();
         }
     }
@@ -93,7 +94,7 @@ public class PlotUtil{
     //Will write to file all needed columns 
    public static void writeXYwithErrorsAndFit(double[] x, double[] y, double[] fit, double xError, double yError, PrintWriter fileOut){
         for(int i=0; i<y.length;i++){
-            fileOut.printf("%2.2f %2.2f %2.2f %2.2f %2.2f", x[i], y[i], fit[i], xError, yError);
+            fileOut.printf("%2.5f %2.5f %2.5f %2.5f %2.5f", x[i], y[i], fit[i], xError, yError);
             fileOut.println();
         }
     }

@@ -52,6 +52,14 @@ public class StatsUtil{
 			}
 			return variance;
 		}
+		public static double stdDeviation(double variance, int length){
+		
+			double stdDev=0.0;
+			if(length !=0){
+					stdDev = Math.sqrt( variance /length);
+			}
+			return stdDev;		
+		}
 		//returns the gradient
 		public static double gradient(double covariance, double xVariance){
 			 

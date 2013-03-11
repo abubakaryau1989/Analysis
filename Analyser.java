@@ -43,13 +43,22 @@ public class Analyser {
     
       String samplesFileB = "errorB.txt";
       String samplesFileF = "errorF.txt";
+
+    
     //System.out.printf("Found file %s", aveFileName);
 
       BufferedReader rawB=new BufferedReader(new FileReader(samplesFileB));
       BufferedReader rawF=new BufferedReader(new FileReader(samplesFileF));
-      
+           
       Scanner scanB= new Scanner(rawB); 
-      Scanner scanF= new Scanner(rawF); 
+      Scanner scanF= new Scanner(rawF);
+      
+      Scanner scanNonLinear = new Scanner (new BufferedReader(new FileReader("glycerin-02.txt")));
+      int lengthNonLinearData = IOUtil.skipToInt(scanNonLinear);
+      
+      double paramNonLinear=1.0/10;
+      double[][] nonLinearData = PlotUtil.data2D(scanNonLinear,lengthNonLinearData);
+
       handleData(fitFout,residualsFout,scanData,scanB,scanF);
 
     }
@@ -57,14 +66,12 @@ public class Analyser {
        
 			//will skip over commas and letters but won't read the numbers unless there is a space.
       int max=IOUtil.skipToInt(scanData);
-      double data[][] = new double[max][2];
+      double[][] data =  PlotUtil.data2D(scanData, max);
         
       //set this to 1 if you don't wish to change data parameter    
       double paramB=1.0/1;
-      double paramF=1.0/1;
-      
-      data = PlotUtil.data(data,scanData);
-               			
+      double paramF=1.0/1;    
+ 
       //Read elements from file
       //Initialise arrays for experimental data by reading X and Y data from the files
      	data = PlotUtil.param(data,paramB,0);
@@ -94,14 +101,28 @@ public class Analyser {
 			double errorOffset = StatsUtil.errorOffset(data.length, xVar, xMean, rss);
 			
 			System.out.println();
-			System.out.printf("\nLength of data = %2.5f  ",(float) data.length);
+			System.out.printf("\nLength of data = %2.0f  ",(float) data.length);
 			System.out.printf("\nSum of squares of residuals = %2.5f  ", rss);
 			System.out.printf("\nError in Y = %2.5f  ", Math.sqrt(rss/data.length));
 			System.out.printf("\nGradient= %2.5f with error +/-  %2.5f ", gradient, errorGradient);
+			
+			double gyromagnetic = gradient * 2 * Math.PI;
+			
+			double litVal = 0.2675;
+			double difference = gyromagnetic - litVal;
+			double relativeErrorGyro= errorGradient/gradient*gradient * 2 * Math.PI;
+			int lengthB =  IOUtil.skipToInt(scanBAve);
+			double[] b = PlotUtil.data1D(scanBAve,lengthB);
+			double meanB=StatsUtil.mean(b);
+			double stdDev=Math.sqrt(StatsUtil.variance(meanB,b)/lengthB);
+			
+			
+			
+			System.out.printf("\nGyromagnetic ratio= %2.4f k/(sT) literature value = %2.4f k/(sT) and difference %2.4f mu/(sT) and error %2.4f k/(sT) ", gyromagnetic, litVal, difference,relativeErrorGyro);
 			System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
 			System.out.printf("\nLinear Correlation Coefficient %g \n", linearCorrelationCoefficient);			
 
-			PlotUtil.writeXYwithErrorsAndFit(PlotUtil.x(data), PlotUtil.y(data),fit, 0.000001, Math.sqrt(rss/data.length), fitFout);
+			PlotUtil.writeXYwithErrorsAndFit(PlotUtil.x(data), PlotUtil.y(data),fit, stdDev, Math.sqrt(rss/data.length), fitFout);
    		fitFout.close();
 	
    		PlotUtil.writeXYwithError(PlotUtil.x(data), yResiduals, Math.sqrt(rss/data.length),residualsFout);
