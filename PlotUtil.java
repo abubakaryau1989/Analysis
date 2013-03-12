@@ -33,7 +33,7 @@ public class PlotUtil{
         }
         return data;
     }
-    public static double[][] param(double[][] data,double param, int index){
+    public static double[][] param2D(double[][] data,double param, int index){
         for (int i=0;i<data.length;i++){
           for (int j=0;j<data[0].length;j++){
           		if(j!=1){
@@ -45,10 +45,10 @@ public class PlotUtil{
         return data;
     }
     //can multiply by a parameter (eg.if changing units.)
-    public static double[] param(double[] data, double param){
+    public static double[] param1D(double[] data, double param){
     		
     		for (int i=0;i<data.length;i++){
-        data[i] = data[i] * param;           
+        data[i] = param*data[i] ;           
       }
       return data;
     }
@@ -84,17 +84,17 @@ public class PlotUtil{
         }
     }
         //Will write to file all needed columns 
-    public static void writeXYwithError(double[] x, double[] y, double error, PrintWriter fileOut){
+    public static void writeXYwithError(double[] x, double[] y, double[] error, PrintWriter fileOut){
         for(int i=0; i<y.length;i++){
-            fileOut.printf("%2.5f %2.5f %2.5f", x[i], y[i], error);
+            fileOut.printf("%2.5f %2.5f %2.5f", x[i], y[i], error[i]);
             fileOut.println();
         }
     }
 
     //Will write to file all needed columns 
-   public static void writeXYwithErrorsAndFit(double[] x, double[] y, double[] fit, double xError, double yError, PrintWriter fileOut){
+   public static void writeXYwithErrorsAndFit(double[] x, double[] y, double[] fit, double xError, double yError[], PrintWriter fileOut){
         for(int i=0; i<y.length;i++){
-            fileOut.printf("%2.5f %2.5f %2.5f %2.5f %2.5f", x[i], y[i], fit[i], xError, yError);
+            fileOut.printf("%2.5f %2.5f %2.5f %2.5f %2.5f", x[i], y[i], fit[i], xError,yError[i]);
             fileOut.println();
         }
     }
@@ -167,5 +167,11 @@ public class PlotUtil{
               downFile.println();
           }
       }
+  }
+      public static double[][] removeOffset(double[][] data, double offset){
+   
+      		for(int i=data.length-1; i>=0; i--) data[i][0] +=-offset;
+      
+      		return data;
   }
  }

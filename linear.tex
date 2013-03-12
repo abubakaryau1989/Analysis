@@ -8,7 +8,7 @@
 \begin{axis}[ /pgf/number format/.cd,  y tick label style={/pgf/number format/.cd,%
           scaled y ticks = false,
           set thousands separator={},
-          fixed}, xlabel={Resonant Magnetic Field [mTesla]}, ylabel={Resonant Frequency [kHz]}]
+          fixed}, xlabel={Resonant Magnetic Field [mT]}, ylabel={Resonant Frequency [MHz]}]
 
 \addplot[mark size=0.5, only marks,
       error bars/.cd,
@@ -23,7 +23,6 @@
     \addplot[no markers,color=blue]
     table [x index = 0, y index= 2]
     {data_glycerin.txt}; 
-       \addlegendentry{\hspace{-.6cm}$42.9(6)B_{0}-$}
 
 \end{axis}
 \end{tikzpicture}

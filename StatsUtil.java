@@ -107,7 +107,7 @@ public class StatsUtil{
 		//Assumes that data has only 2 degrees of freedom.
 		//gives the error in the offset
 		
-			public static double errorOffset(double n,double xVar, double xMean, double rss) {		
+		public static double errorOffset(double n,double xVar, double xMean, double rss) {		
 			double degreesFreedom=n-2;	 
 			double sigma = rss / degreesFreedom;
 			double svar1 = sigma / xVar;

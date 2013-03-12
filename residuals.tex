@@ -1,3 +1,4 @@
+
 \documentclass{standalone}
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
@@ -9,7 +10,7 @@
 
 
 \begin{tikzpicture}
-\begin{axis}[    yticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=1]{\pgfmathresult}}, xlabel={Resonant Magnetic Field [mT]}, ylabel={Residuals [kHz]}]
+\begin{axis}[    yticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=4]{\pgfmathresult}}, xlabel={Resonant Magnetic Field [mT]}, ylabel={Residuals [MHz]}]
 
 \addplot[mark size=0.5, only marks,
       error bars/.cd,
