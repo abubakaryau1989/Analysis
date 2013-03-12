@@ -30,7 +30,7 @@ public class StatsUtil{
 		 
 				sum += data[i];
 			}
-			return sum / data.length;
+			return sum / (double) data.length;
 		}
 		public static double covariance(double xVariance, double yVariance, double[][] data){
 		 
@@ -42,7 +42,7 @@ public class StatsUtil{
 			return covariance;
 		}
 		//works out the difference of least squares fit
-		//It returns the sum of all the variance
+		//It returns the sum of all the variances rather than the variance TODO fixq	1-	-0
 		public static double variance(double mean, double[] data){
 		 
 			double variance=0.0; 
@@ -110,8 +110,8 @@ public class StatsUtil{
 		public static double errorOffset(double n,double xVar, double xMean, double rss) {		
 			double degreesFreedom=n-2;	 
 			double sigma = rss / degreesFreedom;
-			double svar1 = sigma / xVar;
-			return Math.sqrt(sigma/n + xMean*xMean*svar1);
+			double svar = sigma / xVar;
+			return Math.sqrt(sigma/n + xMean*xMean*svar);
 		}
 		//Gives the error in the gradient 
 		public static double errorGradient(double xVariance, double rss, int n){

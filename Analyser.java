@@ -30,7 +30,7 @@ public class Analyser {
     			
       	System.out.printf("Please type in the name of the file you wish to open: ");
     		String fileName = IOUtil.typedInput();
-      System.out.printf("Found file %s", fileName);
+      System.out.printf("Found file %s \n", fileName);
 
       BufferedReader rawData=new BufferedReader(new FileReader(fileName));
       PrintWriter fitFout= new PrintWriter("data_"+fileName);
@@ -38,20 +38,23 @@ public class Analyser {
 
   
       Scanner scanData = new Scanner(rawData);     
-    //System.out.printf("\nPlease type in the next file of the file you wish to open : ");
-    //String aveFileName = IOUtil.typedInput();
-    
-      String samplesFileB = "errorB.txt";
-      String samplesFileF = "errorF.txt";
-
-    
-    //System.out.printf("Found file %s", aveFileName);
-
-      BufferedReader rawB=new BufferedReader(new FileReader(samplesFileB));
-      BufferedReader rawF=new BufferedReader(new FileReader(samplesFileF));
-           
-      Scanner scanB= new Scanner(rawB); 
-      Scanner scanF= new Scanner(rawF);
+    		//System.out.printf("\nPlease type in the next file of the file you wish to open : ");
+    		//String aveFileName = IOUtil.typedInput();
+    		//System.out.printf("Found file %s", aveFileName);
+          
+      Scanner scanB= new Scanner(new BufferedReader(new FileReader("errorB.txt"))); 
+      Scanner scanF= new Scanner(new BufferedReader(new FileReader("errorF.txt")));    
+      Scanner scanMeasured= new Scanner(new BufferedReader(new FileReader("measurements.txt")));
+      
+      int lengthMeasured = IOUtil.skipToInt(scanMeasured);
+      double[] measured = PlotUtil.data1D(scanMeasured,lengthMeasured);
+      double meanMeasured =StatsUtil.mean(measured);
+      
+     
+      double stdDevMeasured = Math.sqrt(StatsUtil.variance(meanMeasured,measured)/lengthMeasured);
+       System.out.printf("No of measurements %d", lengthMeasured);
+    		System.out.printf("\nMean of measurements %2.3f", meanMeasured);
+	    	System.out.printf("\nStandard Deviation of measurements %2.3f \n", stdDevMeasured);
       
       Scanner scanNonLinear = new Scanner (new BufferedReader(new FileReader("glycerin-02.txt")));
       int lengthNonLinearData = IOUtil.skipToInt(scanNonLinear);
@@ -97,7 +100,7 @@ public class Analyser {
 			double[] fit = PlotUtil.param1D(StatsUtil.fit(data, gradient, offset),paramF);
 
 
-      double[] xResiduals = StatsUtil.residuals(PlotUtil.x(data), fit);	
+     // double[] xResiduals = StatsUtil.residuals(PlotUtil.x(data), fit);	
       double[] yResiduals = StatsUtil.residuals(PlotUtil.y(data), fit);
       
       double ssr = StatsUtil.ssr(fit, yMean);	
@@ -107,38 +110,30 @@ public class Analyser {
 			double errorOffset = StatsUtil.errorOffset(data.length, xVar, xMean, rss);
 
 
-			
-			System.out.println();
 			System.out.printf("\nLength of data = %2.0f  ",(float) data.length);
 			System.out.printf("\nSum of squares of residuals = %2.5f  ", rss);
 
 			System.out.printf("\nGradient= %2.4f with error +/-  %2.4f ", gradient, errorGradient);
 			
 			double gyromagnetic = gradient * 2 * Math.PI;
-			double relativeErrorGyro= errorGradient/gradient*gradient * 2 * Math.PI;
+			double relativeErrorGyro= errorGradient/gradient * 2 * Math.PI;
 			
 			double litVal = 0.2675;
 			double absolute = Errors.absolute(litVal,gyromagnetic);
 			double relative = Errors.relative(absolute,litVal);
-
-
-
-			    		
 			
-			
-			System.out.printf("\nGyromagnetic ratio= %2.4f k/(sT) literature value = %2.4f k/(sT) and difference %2.4f k/(sT) and error %2.4f k/(sT) ", gyromagnetic, litVal, absolute,relative);
-			System.out.printf("\nRelative error in gradient  = %2.4f raradient error %2.4f ", Math.sqrt(rss/data.length),errorGradient);
+			System.out.printf("\nGyromagnetic ratio= %2.4f k/(sT) literature value = %2.4f k/(sT) and difference %2.4f k/(sT) \nrelative error %2.4f k/(sT) ", gyromagnetic, litVal, absolute,relative);
+			System.out.printf("\nResidual sum squares  = %2.4f ", Math.sqrt(rss/data.length));
 			System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
 			System.out.printf("\nLinear Correlation Coefficient %g \n", linearCorrelationCoefficient);
-
 			
-			double errorFrequency=gradient*stdDevB;
-			double[] yError = PlotUtil.param1D(PlotUtil.y(data), errorFrequency);
-			
-			System.out.printf("\nRelative error in frequency %g \n", errorFrequency);
-			
+			double relativeErrorField=stdDevB/meanB;
 
-
+			System.out.printf("\nRelative error in field %g \n",relativeErrorField);
+			double relativeErrorFrequency=Math.sqrt(Math.pow(stdDevB/meanB,2));
+			double[] yError = PlotUtil.param1D(PlotUtil.y(data), relativeErrorFrequency);
+			
+			System.out.printf("\nRelative error propergated to frequency %g \n", relativeErrorFrequency);
 		//	PlotUtil.writeXYwithErrorsAndFit(PlotUtil.x(data), PlotUtil.y(data),fit, stdDev, Math.sqrt(rss/data.length), fitFout);
 			PlotUtil.writeXYwithErrorsAndFit(PlotUtil.x(data), PlotUtil.y(data),fit, stdDevB,yError , fitFout);
    		fitFout.close();
