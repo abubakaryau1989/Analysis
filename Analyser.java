@@ -50,11 +50,11 @@ public class Analyser {
       double[] measured = PlotUtil.data1D(scanMeasured,lengthMeasured);
       double meanMeasured =StatsUtil.mean(measured);
       
-     
+      //This gives the errors on the measurements taken and should not be combined with anything else here
       double stdDevMeasured = Math.sqrt(StatsUtil.variance(meanMeasured,measured)/lengthMeasured);
-       System.out.printf("No of measurements %d", lengthMeasured);
-    		System.out.printf("\nMean of measurements %2.3f", meanMeasured);
-	    	System.out.printf("\nStandard Deviation of measurements %2.3f \n", stdDevMeasured);
+      System.out.printf("No of measurements %d", lengthMeasured);
+    		System.out.printf("\nMean of measurements %2.3fcm", meanMeasured);
+	    	System.out.printf("\nStandard Deviation of measurements %2.3fcm\n", stdDevMeasured);
       
       Scanner scanNonLinear = new Scanner (new BufferedReader(new FileReader("glycerin-02.txt")));
       int lengthNonLinearData = IOUtil.skipToInt(scanNonLinear);
@@ -87,8 +87,7 @@ public class Analyser {
       
      	double xMean= StatsUtil.mean(PlotUtil.x(data));
      	double yMean= StatsUtil.mean(PlotUtil.y(data));
-     	
-     	
+          	
      	double xVar= StatsUtil.variance(xMean,PlotUtil.x(data));
      	double yVar= StatsUtil.variance(yMean,PlotUtil.y(data));
      	double covariance= StatsUtil.covariance(xMean,yMean,data);
@@ -99,8 +98,6 @@ public class Analyser {
 
 			double[] fit = PlotUtil.param1D(StatsUtil.fit(data, gradient, offset),paramF);
 
-
-     // double[] xResiduals = StatsUtil.residuals(PlotUtil.x(data), fit);	
       double[] yResiduals = StatsUtil.residuals(PlotUtil.y(data), fit);
       
       double ssr = StatsUtil.ssr(fit, yMean);	
@@ -112,33 +109,33 @@ public class Analyser {
 
 			System.out.printf("\nLength of data = %2.0f  ",(float) data.length);
 			System.out.printf("\nSum of squares of residuals = %2.5f  ", rss);
-
 			System.out.printf("\nGradient= %2.4f with error +/-  %2.4f ", gradient, errorGradient);
 			
-			double gyromagnetic = gradient * 2 * Math.PI;
+			double gyromagnetic = (Math.pow(gradient,-1)*((Math.PI*2)));//TODO remove later 
 			double relativeErrorGyro= errorGradient/gradient * 2 * Math.PI;
 			
 			double litVal = 0.2675;
 			double absolute = Errors.absolute(litVal,gyromagnetic);
 			double relative = Errors.relative(absolute,litVal);
 			
-			System.out.printf("\nGyromagnetic ratio= %2.4f k/(sT) literature value = %2.4f k/(sT) and difference %2.4f k/(sT) \nrelative error %2.4f k/(sT) ", gyromagnetic, litVal, absolute,relative);
-			System.out.printf("\nResidual sum squares  = %2.4f ", Math.sqrt(rss/data.length));
+			System.out.printf("\nGyromagnetic ratio= %2.4f M/(sT) literature value = %2.4f M/(sT) and difference %2.4f M/(sT) \nrelative error %2.4f ", gyromagnetic, litVal, absolute,relative);
+			System.out.printf("\nResidual sum squares  = %2.2f ", Math.sqrt(rss/data.length));
 			System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
-			System.out.printf("\nLinear Correlation Coefficient %g \n", linearCorrelationCoefficient);
+			System.out.printf("\nLinear Correlation Coefficient %g", linearCorrelationCoefficient);
 			
 			double relativeErrorField=stdDevB/meanB;
+			System.out.printf("\nStdDeviation error in field %g mT",stdDevB);
 
-			System.out.printf("\nRelative error in field %g \n",relativeErrorField);
-			double relativeErrorFrequency=Math.sqrt(Math.pow(stdDevB/meanB,2));
+			System.out.printf("\nRelative error in field %g ",relativeErrorField);
+			double relativeErrorFrequency = relativeErrorField;
 			double[] yError = PlotUtil.param1D(PlotUtil.y(data), relativeErrorFrequency);
-			
+
 			System.out.printf("\nRelative error propergated to frequency %g \n", relativeErrorFrequency);
-		//	PlotUtil.writeXYwithErrorsAndFit(PlotUtil.x(data), PlotUtil.y(data),fit, stdDev, Math.sqrt(rss/data.length), fitFout);
-			PlotUtil.writeXYwithErrorsAndFit(PlotUtil.x(data), PlotUtil.y(data),fit, stdDevB,yError , fitFout);
+			PlotUtil.writeXYwithErrorsAndFit(PlotUtil.x(data), PlotUtil.y(data),fit, relativeErrorFrequency,stdDevB, fitFout);
    		fitFout.close();
 	
-   		PlotUtil.writeXYwithError(PlotUtil.x(data), yResiduals, yError,residualsFout);
+			//writes out residuals plot and switches axis to make B field y 
+   		PlotUtil.writeXYwithError(PlotUtil.x(data),yResiduals,stdDevB,residualsFout);
    	  residualsFout.close();
     }
     
