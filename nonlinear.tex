@@ -1,0 +1,34 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{tikz}
+\usepackage{siunitx}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[ /pgf/number format/.cd,  y tick label style={/pgf/number format/.cd,%
+          scaled y ticks = true,
+          set thousands separator={},
+          fixed}, 
+	 yticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=1]{\pgfmathresult}},     
+          xticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=1]{\pgfmathresult}},   xlabel={Time [min]}, ylabel={Distance S [mm]}]  ]        
+          xlabel={Resonant Magnetic Field [Gauss]}, ylabel={A}]
+          
+          \addplot[mark size=0.5, only marks,
+      error bars/.cd,
+        y dir=both, y explicit,
+      ]
+   table [y error index=2, color=red]
+   {data_working.txt};
+
+
+   \addplot[mark size = 0.5, no marks,color=black]
+    table [x index = 0, y index= 1]
+ {data_working.txt};
+
+
+
+\end{axis}
+\end{tikzpicture}
+
+\end{document}

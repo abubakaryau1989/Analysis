@@ -27,6 +27,15 @@ public class Errors{
   	public static double relative(double absolute, double accepted){
   		return absolute/accepted;
   	}
+  	public static double sumSquareErrors(double[] errors){
+  		double sumSquares=0.0;
+  	
+  		for(int i =0;i< errors.length;i++){
+  			sumSquares+=errors[i]*errors[i];
+  		
+  		}
+  		return Math.sqrt(sumSquares);
+  	}
   public static double experimental(double a, double deltaA, double b, double deltaB){
   	  
     		System.out.println("\nMath.pow(deltaA/a,2) "+Math.pow(deltaA/a,2)); 
@@ -35,6 +44,7 @@ public class Errors{
     		System.out.println("error "+Math.sqrt(Math.pow(deltaA/a,2)+Math.pow(deltaB/b,2)));
     
     		return Math.sqrt(Math.pow(deltaA/a,2)+Math.pow(deltaB/b,2));
+
 
 	}
 }

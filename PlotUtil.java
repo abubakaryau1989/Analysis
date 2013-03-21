@@ -18,6 +18,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 import java.io.PrintWriter;
 import java.util.Scanner;
 
@@ -43,14 +44,6 @@ public class PlotUtil{
           }
         }
         return data;
-    }
-    //can multiply by a parameter (eg.if changing units.)
-    public static double[] param1D(double[] data, double param){
-    		
-    		for (int i=0;i<data.length;i++){
-        data[i] = param*data[i] ;           
-      }
-      return data;
     }
     public static double[] data1D(Scanner scan, int length){
     			double[] data=new double[length];
@@ -84,13 +77,19 @@ public class PlotUtil{
         }
     }
         //Will write to file all needed columns 
-    public static void writeXYwithError(double[] x, double[] y, double error, PrintWriter fileOut){
-        for(int i=0; i<y.length;i++){
-            fileOut.printf("%2.5f %2.5f %2.5f", x[i], y[i], error);
+    public static void writeXYwithError(double[] x, double[] y, double[] error, PrintWriter fileOut){
+        for(int i=0; i<x.length;i++){
+            fileOut.printf("%2.5f %2.5f %2.5f", x[i], y[i], error[i]);
             fileOut.println();
         }
     }
-
+    public static double[] parameter(double[] data, double relativeError){
+    			double[] errorTemp= new double[data.length];
+        for(int i=0; i<data.length;i++){
+        			errorTemp[i]= data[i] * relativeError;
+    			}    					
+      		return errorTemp;
+    }
     //Will write to file all needed columns 
    public static void writeXYwithErrorsAndFit(double[] x, double[] y, double[] fit, double xError, double yError, PrintWriter fileOut){
         for(int i=0; i<y.length;i++){
@@ -129,15 +128,15 @@ public class PlotUtil{
         }
         System.out.println();
     }
-    //Work out the minimum value from the SNR (Signal to Noise ratio)
-    public static void peaks(double[][] data, PrintWriter peakFile, double minValue){
+
+    public static void peaks(double[][] data, PrintWriter peakFile, double threshold){
         double peaks=0.0;
 
         //loop through data
         for(int i=0; i<data.length; i++){
 
             //Check that there has been an initial increase and that it is bigger than minvalue
-            if(data[i][1]>data[0][1] && data[i][1]>minValue){
+           if(data[i][1]>data[0][1] && data[i][1]<threshold){
 
                 //if so check that it's significant  enough to bother
                 if(data[i][1]>peaks){
@@ -145,7 +144,7 @@ public class PlotUtil{
                     peakFile.printf("%2.2f %2.2f ",data[i][0], peaks);
                     peakFile.println();
                 }
-            }
+        //    }
             //When the peak has reached its highest point
             else if(data[i][1]<peaks){
                 //reset
@@ -153,23 +152,9 @@ public class PlotUtil{
             }
         }
     }
-    //Unsorted. 
-    public static void writePeaksDown(double[][] data, PrintWriter downFile){
-    
-      double largeDown=0.0;
-      for(int i=data.length-1; i>=0; i--){
-
-          if(data[i][1]>largeDown){
-
-              largeDown=data[i][1];
-              double xPos = data[i][0];
-              downFile.printf("%2.2f %2.2f ",xPos,largeDown);
-              downFile.println();
-          }
-      }
   }
-      public static double[][] removeOffset(double[][] data, double offset){
-   
+  public static double[][] removeOffset(double[][] data, double offset){
+  
       		for(int i=data.length-1; i>=0; i--) data[i][0] +=-offset;
       
       		return data;
