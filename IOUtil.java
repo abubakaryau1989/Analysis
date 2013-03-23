@@ -1,7 +1,8 @@
 /*
-    IOUtils.java
+    IOUtil.java  
+    ============
+    
     Assistant methods for handling IO related happenings
-    Composed entirely of static methods.
 
     Copyright (C) 2013  Magdalen Berns
 
@@ -22,11 +23,11 @@
 import java.util.Scanner;
 import java.io.*;
 
-public class IOUtil {
+public class IOUtil{
 
-    public static double skipToDouble(Scanner scanner) {
+    public static double skipToDouble(Scanner scanner){
 
-        while (scanner.hasNext() && !scanner.hasNextDouble()) {
+        while (scanner.hasNext() && !scanner.hasNextDouble()){
             scanner.next();
         }
         return scanner.hasNextDouble() ? scanner.nextDouble() : Double.NaN;
@@ -54,4 +55,10 @@ public class IOUtil {
         System.out.println("Abusive statement.");
         System.exit(0);
     }
+    public static String getFileName() throws IOException {
+      	System.out.printf("Please type in the name of the file you wish to open: ");
+    		String fileName = typedInput();
+      System.out.printf("Found file %s \n", fileName);
+      return fileName;
+      }
 }

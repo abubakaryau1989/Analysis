@@ -1,8 +1,9 @@
 /*
+    PlotUtil.java
+    =============
+    
     This is a utility for plotting
     For reading and writing files so they can be plotted using pgfplots or similar
-    Composed entirely of static methods
-    
     Copyright (C) 2013  Magdalen Berns
     
     This program is free software: you can redistribute it and/or modify
@@ -33,18 +34,7 @@ public class PlotUtil{
             }
         }
         return data;
-    }
-    public static double[][] param2D(double[][] data,double param, int index){
-        for (int i=0;i<data.length;i++){
-          for (int j=0;j<data[0].length;j++){
-          		if(j!=1){
-               data[i][j] = data[i][j] * param;              
-
-          		}
-          }
-        }
-        return data;
-    }
+ 		}
     public static double[] data1D(Scanner scan, int length){
     			double[] data=new double[length];
         for (int i=0;i<data.length;i++){
@@ -83,17 +73,23 @@ public class PlotUtil{
             fileOut.println();
         }
     }
-    public static double[] parameter(double[] data, double relativeError){
+    public static double[] parameter(double[] data, double parameter){
     			double[] errorTemp= new double[data.length];
         for(int i=0; i<data.length;i++){
-        			errorTemp[i]= data[i] * relativeError;
+        			errorTemp[i]= data[i] * parameter;
     			}    					
       		return errorTemp;
     }
     //Will write to file all needed columns 
    public static void writeXYwithErrorsAndFit(double[] x, double[] y, double[] fit, double xError, double yError, PrintWriter fileOut){
-        for(int i=0; i<y.length;i++){
-            fileOut.printf("%2.5f %2.5f %2.5f %2.5f %2.5f", x[i], y[i], fit[i], xError,yError);
+      for(int i=0; i<y.length;i++){
+        fileOut.printf("%2.5f %2.5f %2.5f %2.5f %2.5f", x[i], y[i], fit[i], xError,yError);
+        fileOut.println();
+      }         
+    }
+   public static void writeColumn(double[] n, PrintWriter fileOut){
+        for(int i=0; i<n.length;i++){
+            fileOut.printf("%2.5f ", n[i]);
             fileOut.println();
         }
     }
@@ -130,9 +126,8 @@ public class PlotUtil{
     }
 
     public static void peaks(double[][] data, PrintWriter peakFile, double threshold){
-        double peaks=0.0;
 
-        //loop through data
+        double peaks=0.0;
         for(int i=0; i<data.length; i++){
 
             //Check that there has been an initial increase and that it is bigger than minvalue

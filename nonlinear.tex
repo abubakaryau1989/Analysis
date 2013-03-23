@@ -3,6 +3,8 @@
 \usepackage{pgfplotstable}
 \usepackage{tikz}
 \usepackage{siunitx}
+\pgfplotsset{compat=1.7}
+
 
 \begin{document}
 \begin{tikzpicture}
@@ -14,17 +16,17 @@
           xticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=1]{\pgfmathresult}},   xlabel={Time [min]}, ylabel={Distance S [mm]}]  ]        
           xlabel={Resonant Magnetic Field [Gauss]}, ylabel={A}]
           
-          \addplot[mark size=0.5, only marks,
+          \addplot[mark size=0.5, only marks,color=red,
       error bars/.cd,
-        y dir=both, y explicit,
+        y dir=both, y explicit, 
       ]
-   table [y error index=2, color=red]
-   {data_working.txt};
+   table [y error index=2,]
+   {period.txt};
 
 
    \addplot[mark size = 0.5, no marks,color=black]
     table [x index = 0, y index= 1]
- {data_working.txt};
+ {period.txt};
 
 
 

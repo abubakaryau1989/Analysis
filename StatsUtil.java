@@ -1,6 +1,7 @@
 /*
  
-		StatsUtil.java 	
+		StatsUtil.java
+		==============
 		
     This is a part of a program which serves as a utility for data analysis
     of experimental data. Copyright (C) 2013  Magdalen Berns
@@ -54,9 +55,9 @@ public class StatsUtil{
 		}
 		public static double stdDeviation(double variance, int length){
 		
-			double stdDev=0.0;
-			if(length !=0){
-					stdDev = Math.sqrt( variance /length);
+			double stdDev= 0.0;
+			if(length > 0){
+					stdDev = Math.sqrt(variance / length);
 			}
 			return stdDev;		
 		}
@@ -106,6 +107,7 @@ public class StatsUtil{
 		}	
 		//Assumes that data has only 2 degrees of freedom.
 		//gives the error in the offset	
+		//TODO tidy this up
 		public static double errorOffset(double n,double xVar, double xMean, double rss) {		
 			double degreesFreedom=n-2;	 
 			double sigma = rss / degreesFreedom;
