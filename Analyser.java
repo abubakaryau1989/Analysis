@@ -29,43 +29,61 @@ public class Analyser {
 
     public static void main(String[] args) throws IOException {
     			
-			String fileName = IOUtil.getFileName();
-  			Scanner scanData = new Scanner(new BufferedReader(new FileReader(fileName)));
-      PrintWriter fitFout = new PrintWriter("data_"+fileName);
+	String fileName = IOUtil.getFileName();
+	Scanner scanData = new Scanner(new BufferedReader(new FileReader(fileName)));
+    PrintWriter fitFout = new PrintWriter("data_"+fileName);
+	PrintWriter peaksFout = new PrintWriter("peaks_"+fileName);
 
       
-			int lengthOfScanned1 = IOUtil.skipToInt(scanData);
-			double xError=IOUtil.skipToDouble(scanData);
-			double yError = IOUtil.skipToDouble(scanData);
+	int lengthOfScanned1 = IOUtil.skipToInt(scanData);
+	double xError=IOUtil.skipToDouble(scanData);
+	double yError = IOUtil.skipToDouble(scanData);
 
-   	  double[][] data = PlotUtil.data2D(scanData,lengthOfScanned1); 
-     	PlotUtil.writeXYwithError(PlotUtil.x(data), PlotUtil.y(data), PlotUtil.parameter(PlotUtil.y(data),yError), fitFout);
-     	fitFout.close();
+    double[][] data = PlotReader.data2Column(scanData,lengthOfScanned1); 
+ 	PlotWriter.errors(PlotUtil.x(data), PlotUtil.y(data), PlotUtil.parameter(PlotUtil.x(data),xError), PlotUtil.parameter(PlotUtil.y(data),yError), fitFout);
+	fitFout.close();
+	PlotWriter.peaks(data,peaksFout);
+	peaksFout.close();
      	
-      System.out.printf("Would you like to pull a column out? \n y/n"); 
-			String choice1 = IOUtil.typedInput();
-			if(choice1.equals("Y") || choice1.equals("y")){
-	      PrintWriter nFout = new PrintWriter("S2.txt");
+     	
+    System.out.printf("Would you like to pull a column out? \n"); 
+   	String choice1 = IOUtil.getFileName();
+    	if(choice1.equals("!")){
+    	 	System.out.println("No file selected to write a column to");
+    }
+    	else{
+		PrintWriter nFout = new PrintWriter("S2.txt");	
+		PlotWriter.aColumn(PlotUtil.y(data),nFout);
+		nFout.close();
+    }    
+    System.out.printf("Would you like to take the average value of any data file? \n"); 
+	String choice2= IOUtil.getFileName();
+    	if(choice2.equals("!")){
+    	 	System.out.println("No file selected to average.");
+ 	}
+	else{
+	
+		Scanner scanToGetAverage = new Scanner(new BufferedReader(new FileReader(IOUtil.getFileName())));
+		int lengthOfScanned2 = IOUtil.skipToInt(scanToGetAverage);
+		double[] averageThisData = PlotReader.data1Column(scanToGetAverage,lengthOfScanned2);
+		double meanValueFromFile = StatsUtil.mean(averageThisData);
+     	System.out.printf("Mean value %g \n",meanValueFromFile); 
+	}
+    	
+   	System.out.printf("Would you like to linearise any data file? \n"); 
+	String choice3= IOUtil.getFileName();
+    	if(choice3.equals("!")){
+    	 	System.out.println("No file selected to Linearise.");
+   	}
+    	else{
+	  	Scanner scanToLinear = new Scanner(new BufferedReader(new FileReader(choice3)));
+	  	int lengthOfScanned3 = IOUtil.skipToInt(scanToLinear);
+		double[][] linearised= PlotUtil.linearise(PlotReader.data3Column(scanToLinear,lengthOfScanned3));
+		PrintWriter linearFout = new PrintWriter("linear.txt");	
+		PlotWriter.write(linearised,	linearFout);
+		linearFout.close();
 		
-				PlotUtil.writeColumn(PlotUtil.y(data),nFout);
-				nFout.close();
-
-				}
-      System.out.printf("Would you like to take the average value of any data file? \n y/n\n"); 
-			String choice = IOUtil.typedInput();
-			if(choice.equals("Y") || choice.equals("y")){
-			   Scanner scanToGetAverage = new Scanner(new BufferedReader(new FileReader(IOUtil.getFileName())));
-				int lengthOfScanned2 = IOUtil.skipToInt(scanToGetAverage);
-
-				double[] averageThisData = PlotUtil.data1D(scanToGetAverage,lengthOfScanned2);
-				
-				double meanValueFromFile = StatsUtil.mean(averageThisData);
-    			System.out.printf("Mean value %g \n",meanValueFromFile);     
-  		  }
-  		  else{
-       
-       System.out.printf("Ok writing files... ");     
-      }
+  	 }
     }   
  /*   public static void handleData(PrintWriter fitFout, double[][] data){
                    

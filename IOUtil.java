@@ -56,9 +56,9 @@ public class IOUtil{
         System.exit(0);
     }
     public static String getFileName() throws IOException {
-      	System.out.printf("Please type in the name of the file you wish to open: ");
-    		String fileName = typedInput();
-      System.out.printf("Found file %s \n", fileName);
-      return fileName;
-      }
+		System.out.printf("Type file name or hit '!' \n"); 
+	 	String typed= typedInput();
+		System.out.printf("Found %s \n", typed); 
+		return typed;
+	}
 }
