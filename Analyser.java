@@ -32,18 +32,15 @@ public class Analyser {
 	String fileName = IOUtil.getFileName();
 	Scanner scanData = new Scanner(new BufferedReader(new FileReader(fileName)));
     PrintWriter fitFout = new PrintWriter("data_"+fileName);
-	PrintWriter peaksFout = new PrintWriter("peaks_"+fileName);
 
       
 	int lengthOfScanned1 = IOUtil.skipToInt(scanData);
 	double xError=IOUtil.skipToDouble(scanData);
 	double yError = IOUtil.skipToDouble(scanData);
 
-    double[][] data = PlotReader.data2Column(scanData,lengthOfScanned1); 
+  double[][] data = PlotReader.data2Column(scanData,lengthOfScanned1);
  	PlotWriter.errors(PlotUtil.x(data), PlotUtil.y(data), PlotUtil.parameter(PlotUtil.x(data),xError), PlotUtil.parameter(PlotUtil.y(data),yError), fitFout);
 	fitFout.close();
-	PlotWriter.peaks(data,peaksFout);
-	peaksFout.close();
      	
      	
     System.out.printf("Would you like to pull a column out? \n"); 
@@ -67,7 +64,7 @@ public class Analyser {
 		int lengthOfScanned2 = IOUtil.skipToInt(scanToGetAverage);
 		double[] averageThisData = PlotReader.data1Column(scanToGetAverage,lengthOfScanned2);
 		double meanValueFromFile = StatsUtil.mean(averageThisData);
-     	System.out.printf("Mean value %g \n",meanValueFromFile); 
+     	System.out.printf("Mean value %g \n", meanValueFromFile); 
 	}
     	
    	System.out.printf("Would you like to linearise any data file? \n"); 
@@ -78,15 +75,17 @@ public class Analyser {
     	else{
 	  	Scanner scanToLinear = new Scanner(new BufferedReader(new FileReader(choice3)));
 	  	int lengthOfScanned3 = IOUtil.skipToInt(scanToLinear);
-		double[][] linearised= PlotUtil.linearise(PlotReader.data3Column(scanToLinear,lengthOfScanned3));
-		PrintWriter linearFout = new PrintWriter("linear.txt");	
-		PlotWriter.write(linearised,	linearFout);
-		linearFout.close();
+		double[][] linearised= PlotUtil.linearise(PlotReader.data3Column(scanToLinear,
+                                                                    lengthOfScanned3));
+    
+		PrintWriter linearFout = new PrintWriter("linear.txt");
+    handleData(linearFout,linearised);
+    linearFout.close();
 		
   	 }
     }   
- /*   public static void handleData(PrintWriter fitFout, double[][] data){
-                   
+    public static void handleData(PrintWriter fitFout, double[][] data){
+
      	double xMean= StatsUtil.mean(PlotUtil.x(data));
      	double yMean= StatsUtil.mean(PlotUtil.y(data));
           	
@@ -96,9 +95,11 @@ public class Analyser {
 
 			double gradient = StatsUtil.gradient(covariance,xVar);//linear correlation coefficient
 			double offset = StatsUtil.yIntercept(xMean,yMean, gradient);
-      
-      ///*double ssr = StatsUtil.ssr(fit, yMean);	
-		  //double rss = StatsUtil.rss(data,fit);//Standard error of mean 	  
+      double[] fit = StatsUtil.fit(data, gradient, offset);
+
+
+      double ssr = StatsUtil.ssr(fit, yMean);
+		  double rss = StatsUtil.rss(data,fit);//Standard error 	  
 		 	double linearCorrelationCoefficient = StatsUtil.linearCC(ssr,yVar);
 			double errorGradient = StatsUtil.errorGradient(xVar,rss, data.length);
 			double errorOffset = StatsUtil.errorOffset(data.length, xVar, xMean, rss);
@@ -110,8 +111,8 @@ public class Analyser {
 			System.out.printf("\nResidual sum squares  = %2.2f ", Math.sqrt(rss/data.length));
 			System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
 			System.out.printf("\nLinear Correlation Coefficient %g", linearCorrelationCoefficient);
+
+      PlotWriter.errorsFit(PlotUtil.x(data),PlotUtil.y(data),fit,0.0,0.0,fitFout);
 		
-   		fitFout.close();
-	
-		}*/
+		}
 }

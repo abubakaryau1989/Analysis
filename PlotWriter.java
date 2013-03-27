@@ -90,40 +90,4 @@ public class PlotWriter{
         }
         System.out.println();
 	}
-
-	public static void peaks(double[][] data, PrintWriter peakFile, double threshold){
-
-		double peaks=0.0;
-        for(int i=0; i<data.length; i++){
-
-            //Check that there has been an initial increase and that it is bigger than minvalue
-           if(data[i][1]>data[0][1] && data[i][1]<threshold){
-
-                //if so check that it's significant  enough to bother
-                if(data[i][1]>peaks){
-                    peaks = data[i][1];
-                    peakFile.printf("%2.2f %2.2f ",data[i][0], peaks);
-                    peakFile.println();
-                }
-        		    //When the peak has reached its highest point
-        		    else if(data[i][1]<peaks){
-                //reset
-        		        peaks=0;
-        		    }
-        		}
-    		}
-  	}
-    public static void peaks(double[][] data, PrintWriter peakFile){
-		double thresh=0.0;
-
-		for (int i = 0; i<data.length-2; i++) {
-			thresh = (data[i+1][1]-data[i][1])*(data[i+2][1]-data[i+1][1]);
-		
-			if (thresh <= 0){
-
-            		peakFile.printf("%2.2f %2.2f", data[i][0], thresh);
-            		peakFile.println();
-		  }
-	  	}
-	}
 }

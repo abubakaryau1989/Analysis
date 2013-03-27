@@ -40,6 +40,16 @@ public class PlotUtil{
         }
         return y;
     }
+  //Returns the y component of a 2D array
+  public static double[] z(double[][] data){
+    double[] z = new double[data.length];
+
+    for (int i=0;i<data.length;i++){
+      z[i]=data[i][2];
+    }
+    return z;
+  }
+
     public static double[] parameter(double[] data, double parameter){
     			double[] errorTemp= new double[data.length];
         for(int i=0; i<data.length;i++){
@@ -60,8 +70,8 @@ public class PlotUtil{
         
         		//TODO move 
         		//double sumSq = Math.sqrt(Math.pow(Calculate.divide(xError,data[i][0]),2));//does th error for x and then squares
-       	  	dummy[i][1] = data[i][1];
-            dummy[i][0] = data[i][0]* data[i][0];
+       	  	dummy[i][0] = data[i][1];
+            dummy[i][1] = data[i][0]* data[i][0];
         }
         return dummy;
 	}
