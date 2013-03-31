@@ -29,19 +29,18 @@ public class Lineariser{
 
     public static void main(String[] args) throws IOException {
     			
-		String fileName = IOUtil.getFileName();
-		Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+fileName)));
-    PrintWriter fitFout = new PrintWriter("files/linear.txt");
-      
-		int length = IOUtil.skipToInt(scan);
-		double xError=IOUtil.skipToDouble(scan);
-		double yError= IOUtil.skipToDouble(scan);
-		double[][] data = PlotUtil.linearise(PlotReader.data3Column(scan, length)); 
+	String fileName = IOUtil.getFileName();
+	Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+fileName)));
+	PrintWriter fitFout = new PrintWriter("files/linear.txt");
+	int length = IOUtil.skipToInt(scan);
+ 	double xError=IOUtil.skipToDouble(scan);
+	double yError= IOUtil.skipToDouble(scan);
+	double[][] data = PlotUtil.linearise(PlotReader.data3Column(scan, length)); 
    	handleData(fitFout,data);
- 	 	fitFout.close();
- 	  System.exit(0);
+ 	fitFout.close();
+ 	System.exit(0);
 		
-	}  
+  }  
   public static void handleData(PrintWriter fitFout, double[][] data){
 
      	double xMean= StatsUtil.mean(PlotUtil.x(data));
@@ -51,24 +50,24 @@ public class Lineariser{
      	double yVar= StatsUtil.variance(yMean,PlotUtil.y(data));
      	double covariance= StatsUtil.covariance(xMean,yMean,data);
 
-			double gradient = StatsUtil.gradient(covariance,xVar);//linear correlation coefficient
-			double offset = StatsUtil.yIntercept(xMean,yMean, gradient);
-      double[] fit = StatsUtil.fit(data, gradient, offset);
-      double ssr = StatsUtil.ssr(fit, yMean);
-		  double rss = StatsUtil.rss(data,fit);//Standard error 	  
-		 	double linearCorrelationCoefficient = StatsUtil.linearCC(ssr,yVar);
-			double errorGradient = StatsUtil.errorGradient(xVar,rss, data.length);
-			double errorOffset = StatsUtil.errorOffset(data.length, xVar, xMean, rss);
+	double gradient = StatsUtil.gradient(covariance,xVar);//linear correlation coefficient
+        double offset = StatsUtil.yIntercept(xMean,yMean, gradient);
+        double[] fit = StatsUtil.fit(data, gradient, offset);
+        double ssr = StatsUtil.ssr(fit, yMean);
+        double rss = StatsUtil.rss(data,fit);//Standard error 	  
+ 	double linearCorrelationCoefficient = StatsUtil.linearCC(ssr,yVar);
+	double errorGradient = StatsUtil.errorGradient(xVar,rss, data.length);
+	double errorOffset = StatsUtil.errorOffset(data.length, xVar, xMean, rss);
 
-			System.out.printf("\nLength of data = %2.0f  ",(float) data.length);
-			System.out.printf("\nSum of squares of residuals = %2.4f  ", rss);
-			System.out.printf("\nGradient= %2.4f with error +/-  %2.4f ", gradient, errorGradient);
+	System.out.printf("\nLength of data = %2.0f  ",(float) data.length);
+	System.out.printf("\nSum of squares of residuals = %2.4f  ", rss);
+	System.out.printf("\nGradient= %2.4f with error +/-  %2.4f ", gradient, errorGradient);
 			
-			System.out.printf("\nResidual sum squares  = %2.2f ", Math.sqrt(rss/data.length));
-			System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
-			System.out.printf("\nLinear Correlation Coefficient %g", linearCorrelationCoefficient);
+	System.out.printf("\nResidual sum squares  = %2.2f ", Math.sqrt(rss/data.length));
+	System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
+	System.out.printf("\nLinear Correlation Coefficient %g", linearCorrelationCoefficient);
 
-      PlotWriter.errorsFit(PlotUtil.x(data),PlotUtil.y(data),fit,0.0,0.0,fitFout);
+        PlotWriter.errorsFit(PlotUtil.x(data),PlotUtil.y(data),fit,0.0,0.0,fitFout); //TODO include the errors.
 		
-		}
+        }
 }
