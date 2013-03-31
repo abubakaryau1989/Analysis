@@ -40,18 +40,18 @@ import java.util.Scanner;
 
 public class AverageData {
 
-  public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 
 		System.out.printf("Please type the name of the data file you wish to average. \n"); 
 		String choice= IOUtil.getFileName();
 		if(!choice.equals(null)){
-				Scanner scan = new Scanner(new BufferedReader(new FileReader(choice)));
-				int length = IOUtil.skipToInt(scan);
-				double[] data = PlotReader.data1Column(scan,length);
-				double mean = StatsUtil.mean(data);
-				System.out.printf("Mean value %g \n", mean); 
-				System.out.printf("std Dev value %g \n", Math.sqrt(StatsUtil.variance(data,mean))); 
-				System.exit(0);
+			Scanner scan = new Scanner(new BufferedReader(new FileReader(choice)));
+			int length = IOUtil.skipToInt(scan);
+			double[] data = PlotReader.data1Column(scan,length);
+			double mean = StatsUtil.mean(data);
+			System.out.printf("Mean value %g \n", mean); 
+			System.out.printf("std Dev value %g \n", Math.sqrt(StatsUtil.variance(data,mean))); 
+			System.exit(0);
 		}
 	}
 }
