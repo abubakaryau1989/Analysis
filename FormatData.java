@@ -27,11 +27,11 @@ import java.util.Scanner;
 
 public class FormatData{
 
-    public static void main(String[] args) throws IOException {
+    	public static void main(String[] args) throws IOException {
     			
 		String fileName = IOUtil.getFileName();
 		Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+fileName)));
-    PrintWriter fitFout = new PrintWriter("files/data_"+fileName);
+    		PrintWriter fitFout = new PrintWriter("files/data_"+fileName);
       
 		int length = IOUtil.skipToInt(scan);
 		double xError=IOUtil.skipToDouble(scan);
@@ -41,5 +41,5 @@ public class FormatData{
 		
 		PlotWriter.errors(PlotUtil.x(data), PlotUtil.y(data), xError,PlotUtil.parameter(PlotUtil.y(data),yError), fitFout);
 		fitFout.close();
-		}
+	}
 }
