@@ -37,15 +37,15 @@ public class ExtractColumn {
   		}
   		else{
 
-		Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+inFileName)));
-		PrintWriter outFile = new PrintWriter("column.txt");
-  		int length = IOUtil.skipToInt(scan);
-		double xError=IOUtil.skipToDouble(scan);
-		double yError= IOUtil.skipToDouble(scan);    
-   		double[][] data = PlotReader.data2Column(scan,length);
+			Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+inFileName)));
+			PrintWriter outFile = new PrintWriter("column.txt");
+  			int length = IOUtil.skipToInt(scan);
+			double xError=IOUtil.skipToDouble(scan);
+			double yError= IOUtil.skipToDouble(scan);    
+   			double[][] data = PlotReader.data2Column(scan,length);
 
-		PlotWriter.aColumn(PlotUtil.y(data),outFile);
-		outFile.close();
+			PlotWriter.aColumn(PlotUtil.y(data),outFile);
+			outFile.close();
  	 	} 
 	}  
 }
