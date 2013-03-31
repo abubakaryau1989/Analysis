@@ -28,24 +28,24 @@ import java.util.Scanner;
 
 public class ExtractColumn {
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
      			
-			System.out.printf("Which file would you like to pull a column out of? \n"); 
-	 		String inFileName = IOUtil.getFileName();
-	 		if(inFileName.equals("!")){
-	  		 	System.out.println("No file selected.");
-  			}
-  			else{
+		System.out.printf("Which file would you like to pull a column out of? \n"); 
+		String inFileName = IOUtil.getFileName();
+	 	if(inFileName.equals("!")){
+ 		 	System.out.println("No file selected.");
+  		}
+  		else{
 
-				Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+inFileName)));
-		    PrintWriter outFile = new PrintWriter("column.txt");
-  				int length = IOUtil.skipToInt(scan);
-				double xError=IOUtil.skipToDouble(scan);
-				double yError= IOUtil.skipToDouble(scan);    
-  		  		double[][] data = PlotReader.data2Column(scan,length);
+		Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+inFileName)));
+		PrintWriter outFile = new PrintWriter("column.txt");
+  		int length = IOUtil.skipToInt(scan);
+		double xError=IOUtil.skipToDouble(scan);
+		double yError= IOUtil.skipToDouble(scan);    
+   		double[][] data = PlotReader.data2Column(scan,length);
 
-				PlotWriter.aColumn(PlotUtil.y(data),outFile);
-				outFile.close();
- 	 		} 
- 	 }  
+		PlotWriter.aColumn(PlotUtil.y(data),outFile);
+		outFile.close();
+ 	 	} 
+	}  
 }
