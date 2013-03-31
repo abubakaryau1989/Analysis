@@ -43,15 +43,28 @@ public class StatsUtil{
 			return covariance;
 		}
 		//works out the difference of least squares fit
-		//It returns the sum of all the variances rather than the variance TODO fixq	1-	-0
+		//It returns the sum of all the variances
 		public static double variance(double mean, double[] data){
 		 
 			double variance=0.0; 
 
 			for (int i = 0; i < data.length; i++){
 				variance += (data[i] - mean)*(data[i] - mean);
+
 			}
 			return variance;
+		}
+		//This is the actual variance TODO replace instances and adjust accordingly
+		//Switched the arguments round so can utilise polymorphism when time is right to use it.
+		public static double variance(double[] data,double mean){
+		 
+			double variance=0.0; 
+
+			for (int i = 0; i < data.length; i++){
+				variance += Math.pow((data[i] - mean),2);
+	    	  System.out.println(variance);
+			}
+			return variance/data.length;
 		}
 		public static double stdDeviation(double variance, int length){
 		
@@ -79,10 +92,10 @@ public class StatsUtil{
 		// Residual Sum of Squares.
 		public static double rss(double[][] data, double[] fit){
 		 
-		double rss = 0.0; //standard error in mean i.e. residual sum of squares
-		for (int i = 0; i < data.length; i++)
-		rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
-		return rss;
+			double rss = 0.0; //standard error in mean i.e. residual sum of squares
+			for (int i = 0; i < data.length; i++)
+			rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
+			return rss;
 		}
 		//Regression sum of squares.
 		public static double ssr(double[] fit, double yMean){
@@ -107,7 +120,6 @@ public class StatsUtil{
 		}	
 		//Assumes that data has only 2 degrees of freedom.
 		//gives the error in the offset	
-		//TODO tidy this up
 		public static double errorOffset(double n,double xVar, double xMean, double rss) {		
 			double degreesFreedom=n-2;	 
 			double sigma = rss / degreesFreedom;
@@ -117,13 +129,12 @@ public class StatsUtil{
 		//Gives the error in the gradient 
 		public static double errorGradient(double xVariance, double rss, int n){
 		
-				double degreesFreedom=n-2;
-				double stdVar = rss / degreesFreedom;	
-				 
-				return Math.sqrt(stdVar/ xVariance);
-		}
-		public static double errorFit(double stdFit){
+			double degreesFreedom=n-2;
+			double stdVar = rss / degreesFreedom;				 
+			return Math.sqrt(stdVar/ xVariance);
+	}
+	public static double errorFit(double stdFit){
 		
-			return Math.sqrt(stdFit);
-		}
+		return Math.sqrt(stdFit);
+	}
 }

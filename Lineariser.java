@@ -1,5 +1,5 @@
 /*
-		Analyser.java 
+		Linearise.java 
 		=============
 		
     This is a utility for data analysis
@@ -25,66 +25,24 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-public class Analyser {
+public class Lineariser{
 
     public static void main(String[] args) throws IOException {
     			
-	String fileName = IOUtil.getFileName();
-	Scanner scanData = new Scanner(new BufferedReader(new FileReader(fileName)));
-    PrintWriter fitFout = new PrintWriter("data_"+fileName);
-
+		String fileName = IOUtil.getFileName();
+		Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+fileName)));
+    PrintWriter fitFout = new PrintWriter("files/linear.txt");
       
-	int lengthOfScanned1 = IOUtil.skipToInt(scanData);
-	double xError=IOUtil.skipToDouble(scanData);
-	double yError = IOUtil.skipToDouble(scanData);
-
-  double[][] data = PlotReader.data2Column(scanData,lengthOfScanned1);
- 	PlotWriter.errors(PlotUtil.x(data), PlotUtil.y(data), PlotUtil.parameter(PlotUtil.x(data),xError), PlotUtil.parameter(PlotUtil.y(data),yError), fitFout);
-	fitFout.close();
-     	
-     	
-    System.out.printf("Would you like to pull a column out? \n"); 
-   	String choice1 = IOUtil.getFileName();
-    	if(choice1.equals("!")){
-    	 	System.out.println("No file selected to write a column to");
-    }
-    	else{
-		PrintWriter nFout = new PrintWriter("S2.txt");	
-		PlotWriter.aColumn(PlotUtil.y(data),nFout);
-		nFout.close();
-    }    
-    System.out.printf("Would you like to take the average value of any data file? \n"); 
-	String choice2= IOUtil.getFileName();
-    	if(choice2.equals("!")){
-    	 	System.out.println("No file selected to average.");
- 	}
-	else{
-	
-		Scanner scanToGetAverage = new Scanner(new BufferedReader(new FileReader(IOUtil.getFileName())));
-		int lengthOfScanned2 = IOUtil.skipToInt(scanToGetAverage);
-		double[] averageThisData = PlotReader.data1Column(scanToGetAverage,lengthOfScanned2);
-		double meanValueFromFile = StatsUtil.mean(averageThisData);
-     	System.out.printf("Mean value %g \n", meanValueFromFile); 
-	}
-    	
-   	System.out.printf("Would you like to linearise any data file? \n"); 
-	String choice3= IOUtil.getFileName();
-    	if(choice3.equals("!")){
-    	 	System.out.println("No file selected to Linearise.");
-   	}
-    	else{
-	  	Scanner scanToLinear = new Scanner(new BufferedReader(new FileReader(choice3)));
-	  	int lengthOfScanned3 = IOUtil.skipToInt(scanToLinear);
-		double[][] linearised= PlotUtil.linearise(PlotReader.data3Column(scanToLinear,
-                                                                    lengthOfScanned3));
-    
-		PrintWriter linearFout = new PrintWriter("linear.txt");
-    handleData(linearFout,linearised);
-    linearFout.close();
+		int length = IOUtil.skipToInt(scan);
+		double xError=IOUtil.skipToDouble(scan);
+		double yError= IOUtil.skipToDouble(scan);
+		double[][] data = PlotUtil.linearise(PlotReader.data3Column(scan, length)); 
+   	handleData(fitFout,data);
+ 	 	fitFout.close();
+ 	  System.exit(0);
 		
-  	 }
-    }   
-    public static void handleData(PrintWriter fitFout, double[][] data){
+	}  
+  public static void handleData(PrintWriter fitFout, double[][] data){
 
      	double xMean= StatsUtil.mean(PlotUtil.x(data));
      	double yMean= StatsUtil.mean(PlotUtil.y(data));
@@ -96,8 +54,6 @@ public class Analyser {
 			double gradient = StatsUtil.gradient(covariance,xVar);//linear correlation coefficient
 			double offset = StatsUtil.yIntercept(xMean,yMean, gradient);
       double[] fit = StatsUtil.fit(data, gradient, offset);
-
-
       double ssr = StatsUtil.ssr(fit, yMean);
 		  double rss = StatsUtil.rss(data,fit);//Standard error 	  
 		 	double linearCorrelationCoefficient = StatsUtil.linearCC(ssr,yVar);

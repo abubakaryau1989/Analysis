@@ -40,9 +40,9 @@ public class PlotWriter{
         }
     }
         //Will write to file all needed columns 
-    public static void errors(double[] x, double[] y, double[] xError, double[] yError, PrintWriter fileOut){
+    public static void errors(double[] x, double[] y, double xError, double[] yError, PrintWriter fileOut){
         for(int i=0; i<x.length;i++){
-            fileOut.printf("%2.5f %2.5f %2.5f", x[i], y[i], yError[i],xError[i]);
+            fileOut.printf("%2.5f %2.5f %2.5f %2.5f ", x[i], y[i], xError,yError[i]);
             fileOut.println();
         }
     }

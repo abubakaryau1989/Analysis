@@ -23,10 +23,13 @@
 
 public class Calculate{
 
-	private double num1;
+	//Instanciate variables to be used by instance methods 
+	private double num1, num;
 	
+	//Initialise variables to be used by instance methods.
 	public Calculate(){
 		num1=0.0;
+		num=0.0;
 	} 
 	/*
 	Static Methods 
