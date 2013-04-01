@@ -39,7 +39,7 @@ public class FormatData{
 
 		double[][] data = PlotReader.data2Column(scan,length);
 		
-		PlotWriter.errors(PlotUtil.x(data), PlotUtil.y(data), xError,PlotUtil.parameter(PlotUtil.y(data),yError), fitFout);
+		PlotWriter.errors(PlotUtil.x(data), PlotUtil.y(data),xError,Calculate.multiply(PlotUtil.y(data),yError), fitFout);
 		fitFout.close();
 	}
 }

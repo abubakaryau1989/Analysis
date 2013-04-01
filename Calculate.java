@@ -36,29 +36,43 @@ public class Calculate{
 	*/
    	public static double subtract(double a, double b){
    		return a - b;	
-	}
-	public static double add(double a,double b){
-  		return a+b;
-	}
-  	public static double divide(double a, double b){
-  		return a/b;
-  	}
-  	public static double multiply(double a, double b){
-  		return a*b;
-  	}
-  		/*
-	Instance Methods 
-	*/
-	public double subtract(double num2){
-   	return num1-num2;	
-	}
-	public double add(double num2){
-  	 	return num1+num2;	
-	}
-  	public double divide(double num2){
-  		return num1/num2;
-  	}
-  	public double multiply(double num2){
-  		return num1*num2;
-  	}
+		}
+		public static double add(double a,double b){
+				return a+b;
+		}
+			public static double divide(double a, double b){
+				return a/b;
+			}
+			public static double multiply(double a, double b){
+				return a*b;
+			}
+		/*
+		Instance Methods 
+		*/
+		public double subtract(double num2){
+		 	return num1-num2;	
+		}
+		public double add(double num2){
+			 	return num1+num2;	
+		}
+		public double divide(double num2){
+			return num1/num2;
+		}
+		public double multiply(double num2){
+			return num1*num2;
+		}
+		public static double[] multiply(double[] a, double b){
+			double[] temp= new double[a.length];
+	  		for(int i=0; i<a.length;i++){
+	  			temp[i]= a[i] * b;
+			}    					
+				return temp;
+		}
+		public static double[] multiply(double[] a, double[]b){
+			double[] temp= new double[a.length];
+	  		for(int i=0; i<a.length;i++){
+	  			temp[i]= a[i] * b[i];
+			}    					
+			return temp;
+		}
 }

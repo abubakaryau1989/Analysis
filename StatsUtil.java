@@ -58,11 +58,9 @@ public class StatsUtil{
 		//Switched the arguments round so can utilise polymorphism when time is right to use it.
 		public static double variance(double[] data,double mean){
 		 
-			double variance=0.0; 
-
+			double variance=0.0;
 			for (int i = 0; i < data.length; i++){
 				variance += Math.pow((data[i] - mean),2);
-	    	  System.out.println(variance);
 			}
 			return variance/data.length;
 		}

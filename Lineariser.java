@@ -18,7 +18,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,6 +28,7 @@ public class Lineariser{
 
     public static void main(String[] args) throws IOException {
     			
+<<<<<<< HEAD
 	String fileName = IOUtil.getFileName();
 	Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+fileName)));
 	PrintWriter fitFout = new PrintWriter("files/linear.txt");
@@ -42,6 +42,22 @@ public class Lineariser{
 		
   }  
   public static void handleData(PrintWriter fitFout, double[][] data){
+=======
+				String fileName = IOUtil.getFileName();
+				Scanner scan = new Scanner(new BufferedReader(new FileReader("files/"+fileName)));
+				PrintWriter fitFout = new PrintWriter("files/linear.txt");
+				  
+				int length = IOUtil.skipToInt(scan);
+				double xError=IOUtil.skipToDouble(scan);
+				double yError= IOUtil.skipToDouble(scan);
+				double[][] data = PlotReader.data2Column(scan, length); 
+			 	handleData(fitFout,data, xError, yError);
+		 	 	fitFout.close();
+		 	  System.exit(0);
+		
+	}  
+  public static void handleData(PrintWriter fitFout, double[][] data, double xError, double yError){
+>>>>>>> tidied it up by putting more things in calculator class
 
      	double xMean= StatsUtil.mean(PlotUtil.x(data));
      	double yMean= StatsUtil.mean(PlotUtil.y(data));
@@ -67,7 +83,11 @@ public class Lineariser{
 	System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
 	System.out.printf("\nLinear Correlation Coefficient %g", linearCorrelationCoefficient);
 
+<<<<<<< HEAD
         PlotWriter.errorsFit(PlotUtil.x(data),PlotUtil.y(data),fit,0.0,0.0,fitFout); //TODO include the errors.
+=======
+      PlotWriter.errorsFit(Calculate.multiply(PlotUtil.x(data),PlotUtil.x(data)),PlotUtil.y(data),fit,xError,Calculate.multiply(PlotUtil.y(data),yError),fitFout);
+>>>>>>> tidied it up by putting more things in calculator class
 		
         }
 }

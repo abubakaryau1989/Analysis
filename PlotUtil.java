@@ -63,6 +63,8 @@ public class PlotUtil{
 			return data;
 	}
 	//Returns y'=mx'+c for x'=x*x y=y
+	//This is probably not needed 
+
   public static double[][] linearise(double[][] data){
   		double[][] dummy = new double[data.length][2];
 
@@ -71,6 +73,7 @@ public class PlotUtil{
    	  	dummy[i][0] = data[i][1];
       dummy[i][1] = data[i][0]* data[i][0];
       }
-      return dummy;
+     
+  return dummy;
 		}
 }

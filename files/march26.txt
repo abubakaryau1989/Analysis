@@ -1,6 +1,6 @@
 length= 642
-errorx= 0.0742063
-errory= 0.01
+error x = 0.1136066667
+error y = 0.02
 0	44.1	NAN	
 0.25	43.5	NAN	
 0.5	48.6	NAN	

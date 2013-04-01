@@ -2,39 +2,35 @@
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
 \usepackage{tikz}
-\usepackage{siunitx}
 \pgfplotsset{compat=1.7}
 
 
 \begin{document}
 \begin{tikzpicture}
-\begin{axis}[ /pgf/number format/.cd,  y tick label style={/pgf/number format/.cd,%
-          scaled y ticks = true, xmin=0, xmax=160, ymin=10,
-          %set thousands separator={},
-        }, 
-	 yticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=0]{\pgfmathresult}},     
-          xticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=0]{\pgfmathresult}},  
+\begin{axis}[ xmin=0,xmax=160,
            xlabel={Time [min]}, 
            ylabel={S [mm]}]  ]    
           
-          \addplot[mark size=0.2, only marks,color=red,
+          \addplot[no marks,color=blue,
       error bars/.cd,
         y dir=both, y explicit, 
       ]
    table [x error index=3]
    {data_march26.txt};
    
-         \addplot[mark size=0.1, only marks,color=blue,
+         \addplot[no marks,color=orange,
       error bars/.cd,
         x dir=both, x explicit, 
       ]
    table [x error index=2]
    {data_march26.txt};
+      \legend{x error, y error}
 
 
    \addplot[no marks,color=black]
     table [x index = 0, y index= 1]
  {data_march26.txt};
+ 
 
 
 

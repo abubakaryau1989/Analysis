@@ -47,9 +47,9 @@ public class PlotWriter{
         }
     }
     //Will write to file all needed columns 
-   public static void errorsFit(double[] x, double[] y, double[] fit, double xError, double yError, PrintWriter fileOut){
+   public static void errorsFit(double[] x, double[] y, double[] fit, double xError, double[] yError, PrintWriter fileOut){
       for(int i=0; i<y.length;i++){
-        fileOut.printf("%2.5f %2.5f %2.5f %2.5f %2.5f", x[i], y[i], fit[i], xError,yError);
+        fileOut.printf("%2.5f %2.5f %2.5f %2.5f %2.5f", x[i], y[i], fit[i], xError,yError[i]);
         fileOut.println();
       }         
     }
