@@ -8,11 +8,10 @@
 \begin{document}
 \begin{tikzpicture}
 \begin{axis}[legend pos = north east,  /pgf/number format/.cd,  y tick label style={/pgf/number format/.cd,%
-          scaled y ticks = true,
-          set thousands separator={},
+          scaled y ticks = false,
           fixed}, 
-	 yticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=0]{\pgfmathresult}},     
-          xticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=0]{\pgfmathresult}},   xlabel={T [$\mathrm{min^{2}}$]}, ylabel={S [mm]}]  ]        
+	 yticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=1]{\pgfmathresult}},     
+          xticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=1]{\pgfmathresult}},   xlabel={$\mathrm{T^{2}}$ [$\mathrm{min^{2}}$]}, ylabel={S [mm]}]  ]        
           
           
 \addplot[mark size=0.5, only marks,
@@ -26,16 +25,9 @@
    \addplot[mark size = 0.5, only marks,color=black]
     table [x index = 0, y index= 1]
  {linear.txt};
-\addlegendentry{Data}
-
-    \addplot[mark size = 0.5, no marks,color=blue]
-    table [x index = 0, y index= 2]
- {linear.txt};\addlegendentry[blue]{Best Fit}
-
-
-
-
-
+  %  \addplot[no marks,color=blue]
+    %table [x index = 0, y index= 2]
+ %{linear.txt};
 
 \end{axis}
 \end{tikzpicture}

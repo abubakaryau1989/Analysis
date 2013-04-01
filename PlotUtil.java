@@ -21,6 +21,9 @@
 */
 public class PlotUtil{
 
+
+	//TODO make this instances methods. It is totally pointless to have three static methods doing the same thing.
+	//alternately. Rename one and delete the other two.
  
   //Returns the x component of a 2D array
   public static double[] x(double[][] data){
@@ -49,31 +52,9 @@ public class PlotUtil{
     }
     return z;
   }
-
-	public static double[] parameter(double[] data, double parameter){
-			double[] errorTemp= new double[data.length];
-    for(int i=0; i<data.length;i++){
-    			errorTemp[i]= data[i] * parameter;
-			}    					
-  		return errorTemp;
-	}
 	public static double[][] removeOffset(double[][] data, double offset){
 
 		for(int i=data.length-1; i>=0; i--) data[i][0] +=-offset;
 			return data;
 	}
-	//Returns y'=mx'+c for x'=x*x y=y
-	//This is probably not needed 
-
-  public static double[][] linearise(double[][] data){
-  		double[][] dummy = new double[data.length][2];
-
-    for (int i=0;i<data.length;i++){
-
-   	  	dummy[i][0] = data[i][1];
-      dummy[i][1] = data[i][0]* data[i][0];
-      }
-     
-  return dummy;
-		}
 }
