@@ -60,5 +60,5 @@ public class IOUtil{
 	 	String typed= typedInput();
 		System.out.printf("Found %s \n", typed); 
 		return typed;
-	}
+			}
 }

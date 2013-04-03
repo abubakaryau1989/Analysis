@@ -42,6 +42,15 @@ public class StatsUtil{
 			}
 			return covariance;
 		}
+		public static double covariance(double xVariance, double yVariance, double[] x, double[] y){
+		 
+			double covariance=0.0; 
+			//works out the difference of least squares fit
+			for (int i = 0; i < x.length; i++) {
+				covariance += (x[i] - xVariance) * (y[i] - yVariance);
+			}
+			return covariance;
+		}
 		//works out the difference of least squares fit
 		//It returns the sum of all the variances
 		public static double variance(double mean, double[] data){
@@ -87,12 +96,26 @@ public class StatsUtil{
 				fit[i] = gradient*data[i][0] + offset;
 			return fit;
 		}
+		public static double[] fit(double[] x, double gradient, double offset){
+			double[] fit=new double[x.length];
+			for(int i=0; i<x.length; i++)
+				fit[i] = gradient*x[i] + offset;
+			return fit;
+		}
 		// Residual Sum of Squares.
 		public static double rss(double[][] data, double[] fit){
 		 
 			double rss = 0.0; //standard error in mean i.e. residual sum of squares
 			for (int i = 0; i < data.length; i++)
 			rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
+			return rss;
+		}
+				// Residual Sum of Squares.
+		public static double rss(double[] y, double[] fit){
+		 
+			double rss = 0.0; //standard error in mean i.e. residual sum of squares
+			for (int i = 0; i < y.length; i++)
+			rss += (fit[i] - y[i]) * (fit[i] - y[i]);
 			return rss;
 		}
 		//Regression sum of squares.
@@ -104,11 +127,11 @@ public class StatsUtil{
 			}
 			return ssr;
 		}
-		public static double[] residuals(double[] data, double[] fit){
+		public static double[] residuals(double[] y, double[] fit){
 		 
-			double[] residuals=new double[data.length];
-			for (int i = 0; i < data.length; i++){
-				residuals[i] = data[i]- fit[i];
+			double[] residuals=new double[y.length];
+			for (int i = 0; i < y.length; i++){
+				residuals[i] = y[i] - fit[i];
 			}
 			return residuals;
 		}
