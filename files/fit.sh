@@ -14,7 +14,7 @@ set ytics nomirror
 set format x "%2.0f" 
 set format y "%2.0f" 
 
-u(x) = a*x + b
+u(x) = a**x + b
 fit u(x) 'linear.txt' using 1:2 via a,b
 
 set xzeroaxis linestyle 2 lt 2 lc 9

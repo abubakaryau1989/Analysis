@@ -43,8 +43,9 @@ public class ExtractColumn {
 			double xError=IOUtil.skipToDouble(scan);
 			double yError= IOUtil.skipToDouble(scan);    
    			double[][] data = PlotReader.data2Column(scan,length);
+   			PlotUtil p = new PlotUtil(data);
 
-			PlotWriter.aColumn(PlotUtil.y(data),outFile);
+			PlotWriter.aColumn(p.y(),outFile);
 			outFile.close();
  	 	} 
 	}  

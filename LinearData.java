@@ -37,15 +37,19 @@ public class LinearData{
 		double xError=IOUtil.skipToDouble(scan);
 		double yError= IOUtil.skipToDouble(scan);
 		double[][] data = PlotReader.data2Column(scan, length); 
-	 	handleData(fitFout,data, xError, yError);
+		PlotUtil p = new PlotUtil(data);
+		
+	 	handleData(fitFout,p.x(),p.y(),xError, yError);
 
 
 		
   }   
-  public static void handleData(PrintWriter fitFout, double[][] data, double xError, double yError){
+  public static void handleData(PrintWriter fitFout, double[] x, double[] y, double xError, double yError){
   
-  		double[] y = Calculate.multiply(PlotUtil.x(data),PlotUtil.x(data));
-  		double[] x = PlotUtil.y(data);
+  		//This should probably happen in its own method.
+  		x = Calculate.multiply(x,x);
+
+
 	
 		double xMean= StatsUtil.mean(x);
 		double yMean= StatsUtil.mean(y);
@@ -58,19 +62,19 @@ public class LinearData{
 		double offset = StatsUtil.yIntercept(xMean,yMean, gradient);
 		double[] fit = StatsUtil.fit(x, gradient, offset);
 		double ssr = StatsUtil.ssr(fit, yMean);
-		double rss = StatsUtil.rss(data,fit);//Standard error 	  
+		double rss = StatsUtil.rss(y,fit);//Standard error 	  
 		double linearCorrelationCoefficient = StatsUtil.linearCC(ssr,yVar);
-		double errorGradient = StatsUtil.errorGradient(xVar,rss, data.length);
-		double errorOffset = StatsUtil.errorOffset(data.length, xVar, xMean, rss);
+		double errorGradient = StatsUtil.errorGradient(xVar,rss, x.length);
+		double errorOffset = StatsUtil.errorOffset(x.length, xVar, xMean, rss);
 
 		System.out.printf("\nLength of data = %2.0f  ",(float) x.length);
 		System.out.printf("\nSum of squares of residuals = %2.4f  ", rss);
 		System.out.printf("\nGradient= %2.4f with error +/-  %2.4f ", gradient, errorGradient);
 
-		System.out.printf("\nResidual sum squares  = %2.2f ", Math.sqrt(rss/data.length));
+		System.out.printf("\nResidual sum squares  = %2.2f ", Math.sqrt(rss/x.length));
 		System.out.printf("\nOffset = %g with error  +/-  %g ", offset, errorOffset);		
 		System.out.printf("\nLinear Correlation Coefficient %g", linearCorrelationCoefficient);
-		PlotWriter.errorsFit(Calculate.multiply(x,x),y,fit, xError,Calculate.multiply(y,yError),fitFout);
+		PlotWriter.errorsFit(x,y,fit, xError,Calculate.multiply(y,yError),fitFout);
 		fitFout.close();
  	  	System.exit(0);
   		}

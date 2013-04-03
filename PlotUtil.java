@@ -21,13 +21,19 @@
 */
 public class PlotUtil{
 
-
-	//TODO make this instances methods. It is totally pointless to have three static methods doing the same thing.
-	//alternately. Rename one and delete the other two.
- 
+	private double[] x, y, z;
+	private double [][] data;
+	
+	public PlotUtil(double[][] data){
+		this.data=data;
+	
+		x = new double[data.length];
+		y = new double[data.length];
+		z = new double[data.length];
+	} 
   //Returns the x component of a 2D array
-  public static double[] x(double[][] data){
-      double[] x = new double[data.length];
+  public double[] x(){
+
 
       for (int i=0;i<data.length;i++){
           x[i]= data[i][0];
@@ -35,18 +41,15 @@ public class PlotUtil{
       return x;
   }
   //Returns the y component of a 2D array
-  public static double[] y(double[][] data){
-      double[] y = new double[data.length];
-
+  public double[] y(){
       for (int i=0;i<data.length;i++){
           y[i]=data[i][1];
       }
       return y;
   }
   //Returns the y component of a 2D array
-  public static double[] z(double[][] data){
-    double[] z = new double[data.length];
-
+  public double[] z(){
+  
     for (int i=0;i<data.length;i++){
       z[i]=data[i][2];
     }
