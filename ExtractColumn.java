@@ -4,7 +4,6 @@
 		
     This is a java program to be run when you want to pull a column out of a data file 
     in order to meddle with it. Copyright (C) 2013  Magdalen Berns
-   	The meddlings has yet to be added. TODO put some choice in about what should be used.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

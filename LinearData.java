@@ -38,6 +38,7 @@ public class LinearData{
 		double yError= IOUtil.skipToDouble(scan);
 		double[][] data = PlotReader.data2Column(scan, length); 
 		PlotUtil p = new PlotUtil(data);
+
 		
 	 	handleData(fitFout,p.x(),p.y(),xError, yError);
 
@@ -46,10 +47,9 @@ public class LinearData{
   }   
   public static void handleData(PrintWriter fitFout, double[] x, double[] y, double xError, double yError){
   
-  		//This should probably happen in its own method.
+		
+		// Makes x into x^2 Comment out if not needed 
   		x = Calculate.multiply(x,x);
-
-
 	
 		double xMean= StatsUtil.mean(x);
 		double yMean= StatsUtil.mean(y);
@@ -68,7 +68,6 @@ public class LinearData{
 		double errorOffset = StatsUtil.errorOffset(x.length, xVar, xMean, rss);
 
 		System.out.printf("\nLength of data = %2.0f  ",(float) x.length);
-		System.out.printf("\nSum of squares of residuals = %2.4f  ", rss);
 		System.out.printf("\nGradient= %2.4f with error +/-  %2.4f ", gradient, errorGradient);
 
 		System.out.printf("\nResidual sum squares  = %2.2f ", Math.sqrt(rss/x.length));

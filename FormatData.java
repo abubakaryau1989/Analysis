@@ -38,8 +38,9 @@ public class FormatData{
 		double yError= IOUtil.skipToDouble(scan);
 
 		double[][] data = PlotReader.data2Column(scan,length);
+		PlotUtil p = new PlotUtil(data);
 		
-		PlotWriter.errors(PlotUtil.x(data), PlotUtil.y(data),xError,Calculate.multiply(PlotUtil.y(data),yError), fitFout);
+		PlotWriter.errors(p.x(), p.y(),xError,Calculate.multiply(p.y(),yError), fitFout);
 		fitFout.close();
 		}
 }
