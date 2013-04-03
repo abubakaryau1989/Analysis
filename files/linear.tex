@@ -1,102 +1,39 @@
-% GNUPLOT: LaTeX picture with Postscript
-\begingroup
-  \makeatletter
-  \providecommand\color[2][]{%
-    \GenericError{(gnuplot) \space\space\space\@spaces}{%
-      Package color not loaded in conjunction with
-      terminal option `colourtext'%
-    }{See the gnuplot documentation for explanation.%
-    }{Either use 'blacktext' in gnuplot or load the package
-      color.sty in LaTeX.}%
-    \renewcommand\color[2][]{}%
-  }%
-  \providecommand\includegraphics[2][]{%
-    \GenericError{(gnuplot) \space\space\space\@spaces}{%
-      Package graphicx or graphics not loaded%
-    }{See the gnuplot documentation for explanation.%
-    }{The gnuplot epslatex terminal needs graphicx.sty or graphics.sty.}%
-    \renewcommand\includegraphics[2][]{}%
-  }%
-  \providecommand\rotatebox[2]{#2}%
-  \@ifundefined{ifGPcolor}{%
-    \newif\ifGPcolor
-    \GPcolorfalse
-  }{}%
-  \@ifundefined{ifGPblacktext}{%
-    \newif\ifGPblacktext
-    \GPblacktexttrue
-  }{}%
-  % define a \g@addto@macro without @ in the name:
-  \let\gplgaddtomacro\g@addto@macro
-  % define empty templates for all commands taking text:
-  \gdef\gplbacktext{}%
-  \gdef\gplfronttext{}%
-  \makeatother
-  \ifGPblacktext
-    % no textcolor at all
-    \def\colorrgb#1{}%
-    \def\colorgray#1{}%
-  \else
-    % gray or color?
-    \ifGPcolor
-      \def\colorrgb#1{\color[rgb]{#1}}%
-      \def\colorgray#1{\color[gray]{#1}}%
-      \expandafter\def\csname LTw\endcsname{\color{white}}%
-      \expandafter\def\csname LTb\endcsname{\color{black}}%
-      \expandafter\def\csname LTa\endcsname{\color{black}}%
-      \expandafter\def\csname LT0\endcsname{\color[rgb]{1,0,0}}%
-      \expandafter\def\csname LT1\endcsname{\color[rgb]{0,1,0}}%
-      \expandafter\def\csname LT2\endcsname{\color[rgb]{0,0,1}}%
-      \expandafter\def\csname LT3\endcsname{\color[rgb]{1,0,1}}%
-      \expandafter\def\csname LT4\endcsname{\color[rgb]{0,1,1}}%
-      \expandafter\def\csname LT5\endcsname{\color[rgb]{1,1,0}}%
-      \expandafter\def\csname LT6\endcsname{\color[rgb]{0,0,0}}%
-      \expandafter\def\csname LT7\endcsname{\color[rgb]{1,0.3,0}}%
-      \expandafter\def\csname LT8\endcsname{\color[rgb]{0.5,0.5,0.5}}%
-    \else
-      % gray
-      \def\colorrgb#1{\color{black}}%
-      \def\colorgray#1{\color[gray]{#1}}%
-      \expandafter\def\csname LTw\endcsname{\color{white}}%
-      \expandafter\def\csname LTb\endcsname{\color{black}}%
-      \expandafter\def\csname LTa\endcsname{\color{black}}%
-      \expandafter\def\csname LT0\endcsname{\color{black}}%
-      \expandafter\def\csname LT1\endcsname{\color{black}}%
-      \expandafter\def\csname LT2\endcsname{\color{black}}%
-      \expandafter\def\csname LT3\endcsname{\color{black}}%
-      \expandafter\def\csname LT4\endcsname{\color{black}}%
-      \expandafter\def\csname LT5\endcsname{\color{black}}%
-      \expandafter\def\csname LT6\endcsname{\color{black}}%
-      \expandafter\def\csname LT7\endcsname{\color{black}}%
-      \expandafter\def\csname LT8\endcsname{\color{black}}%
-    \fi
-  \fi
-  \setlength{\unitlength}{0.0500bp}%
-  \begin{picture}(7200.00,5040.00)%
-    \gplgaddtomacro\gplbacktext{%
-      \csname LTb\endcsname%
-      \put(682,704){\makebox(0,0)[r]{\strut{}-3}}%
-      \put(682,1383){\makebox(0,0)[r]{\strut{}-2}}%
-      \put(682,2061){\makebox(0,0)[r]{\strut{}-1}}%
-      \put(682,2740){\makebox(0,0)[r]{\strut{} 0}}%
-      \put(682,3418){\makebox(0,0)[r]{\strut{} 1}}%
-      \put(682,4097){\makebox(0,0)[r]{\strut{} 2}}%
-      \put(682,4775){\makebox(0,0)[r]{\strut{} 3}}%
-      \put(814,484){\makebox(0,0){\strut{}-15}}%
-      \put(1812,484){\makebox(0,0){\strut{}-10}}%
-      \put(2810,484){\makebox(0,0){\strut{}-5}}%
-      \put(3809,484){\makebox(0,0){\strut{} 0}}%
-      \put(4807,484){\makebox(0,0){\strut{} 5}}%
-      \put(5805,484){\makebox(0,0){\strut{}10}}%
-      \put(6803,484){\makebox(0,0){\strut{}15}}%
-      \csname LTb\endcsname%
-      \put(176,2739){\rotatebox{-270}{\makebox(0,0){\strut{}Voltage mV}}}%
-      \put(3240,154){\makebox(0,0){\strut{}Applied Current mA}}%
-    }%
-    \gplgaddtomacro\gplfronttext{%
-    }%
-    \gplbacktext
-    \put(0,0){\includegraphics{linear}}%
-    \gplfronttext
-  \end{picture}%
-\endgroup
+\documentclass{standalone}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\pgfplotsset{compat=1.7}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[legend pos = north east,  /pgf/number format/.cd,  y tick label style={/pgf/number format/.cd,%
+          scaled y ticks = false,
+          fixed}, 
+	 yticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=1]{\pgfmathresult}},     
+          xticklabel={\pgfmathparse{(\tick)}\num[round-mode=places, round-precision=0]{\pgfmathresult}},   xlabel={$\mathrm{T^{2}}$ [$\mathrm{min^{2}}$]}, ylabel={S [mm]}]  ]        
+          
+          
+\addplot[mark size=0.2, only marks,
+    error bars/.cd,
+    y dir=both, y explicit,
+    x dir=both, x explicit]
+   table [x error index=3, y error index=4]
+   {linear.txt};
+
+
+   \addplot[mark size = 0.5, only marks,color=black]
+    table [x index = 0, y index= 1]
+ {linear.txt};
+   \addplot[no marks,color=blue]
+    table [x index = 0, y index= 2]
+ {linear.txt};
+
+\end{axis}
+
+\end{tikzpicture}
+
+
+
+\end{document}

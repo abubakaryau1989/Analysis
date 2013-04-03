@@ -44,8 +44,8 @@ public class LinearData{
   }   
   public static void handleData(PrintWriter fitFout, double[][] data, double xError, double yError){
   
-  		double[] x = Calculate.multiply(PlotUtil.x(data),PlotUtil.x(data));
-  		double[] y = PlotUtil.y(data);
+  		double[] y = Calculate.multiply(PlotUtil.x(data),PlotUtil.x(data));
+  		double[] x = PlotUtil.y(data);
 	
 		double xMean= StatsUtil.mean(x);
 		double yMean= StatsUtil.mean(y);
@@ -73,7 +73,5 @@ public class LinearData{
 		PlotWriter.errorsFit(Calculate.multiply(x,x),y,fit, xError,Calculate.multiply(y,yError),fitFout);
 		fitFout.close();
  	  	System.exit(0);
-
-
   		}
 }
