@@ -38,14 +38,15 @@ public class LinearData{
 		double yError= IOUtil.skipToDouble(scan);
 		double[][] data = PlotReader.data2Column(scan, length); 
 		PlotUtil p = new PlotUtil(data);
-
+		PrintWriter residualsWriter=new PrintWriter("files/residuals.txt");//TODO Handle in own class
 		
-	 	handleData(fitFout,p.x(),p.y(),xError, yError);
+	 	handleData(fitFout,residualsWriter,p.x(),p.y(),xError, yError);
+	 	
 
 
 		
   }   
-  public static void handleData(PrintWriter fitFout, double[] x, double[] y, double xError, double yError){
+  public static void handleData(PrintWriter fitFout, PrintWriter residualsWriter, double[] x, double[] y, double xError, double yError){
   
 		
 		// Makes x into x^2 Comment out if not needed 
@@ -62,7 +63,12 @@ public class LinearData{
 		double offset = StatsUtil.yIntercept(xMean,yMean, gradient);
 		double[] fit = StatsUtil.fit(x, gradient, offset);
 		double ssr = StatsUtil.ssr(fit, yMean);
-		double rss = StatsUtil.rss(y,fit);//Standard error 	  
+		double rss = StatsUtil.rss(y,fit);//Standard error
+		
+
+		PlotWriter.errors(x,StatsUtil.residuals(y,fit),xError,Calculate.multiply(y,yError),residualsWriter);
+		residualsWriter.close(); 	  
+		
 		double linearCorrelationCoefficient = StatsUtil.linearCC(ssr,yVar);
 		double errorGradient = StatsUtil.errorGradient(xVar,rss, x.length);
 		double errorOffset = StatsUtil.errorOffset(x.length, xVar, xMean, rss);
