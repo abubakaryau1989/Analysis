@@ -25,6 +25,3 @@ set yrange [ -3.0 : 3.0 ]
 
 plot  u(x), 'z.png' using 1:2:4:5 with xyerrorbars
 TOEND
-
-
-
