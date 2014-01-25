@@ -4,7 +4,7 @@
 #
 # removal.sh
 # ==========
-# Copyright (C) 2013  Magdalen Berns
+# Copyright (C) 2013-2014  Magdalen Berns <m.berns@sms.ed.ac.uk>
 # A simple but useful bash script to get rid of annoying files with a single command. 
 # just be careful not to delete things you want to keep!
 #
