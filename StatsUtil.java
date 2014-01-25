@@ -40,6 +40,22 @@ public class StatsUtil{
         }
         return covariance;
     }
+
+    /**
+     * fit
+     *                   Works out the fit of the data
+     * @data
+     *                   Array of doubles holding the x and y values in [i][0] and [0][j] respectively
+     *
+     * @gradient
+     *                  The gradient
+     * @offset
+     *                  The offset constant value on the y axis
+     *
+     * @return
+     *                  The the least squares fit as an array of doubles
+     *
+     */
     public static double covariance(double xVariance, double yVariance, double[] x, double[] y){
 
         double covariance=0.0;
@@ -90,6 +106,7 @@ public class StatsUtil{
         }
         return stdDev;
     }
+
     /**
      * gradient
      *                   Works out the standard deviation of least squares fit
@@ -106,6 +123,7 @@ public class StatsUtil{
 
         return covariance / xVariance;
     }
+
     /**
      * yIntercept
      *                   Works out the offset of the data (i.e the constant value by which y is offset)
@@ -128,7 +146,7 @@ public class StatsUtil{
      * fit
      *                   Works out the fit of the data
      * @data
-     *                   Array holding the x and y values in [i][0] and [0][j] respectively
+     *                   Array of doubles holding the x and y values in [i][0] and [j][1] respectively
      *
      * @gradient
      *                  The gradient
@@ -150,7 +168,7 @@ public class StatsUtil{
      * fit
      *                   Works out the fit of the data
      * @x
-     *                   Array of doubles holding the x values 
+     *                   Array of doubles holding the x values
      *
      * @gradient
      *                  The gradient
@@ -167,9 +185,20 @@ public class StatsUtil{
             fit[i] = gradient*x[i] + offset;
         return fit;
     }
-    // Residual Sum of Squares.
-    public static double rss(double[][] data, double[] fit){
 
+    /**
+     * standardError
+     *                  Gives the residual sum of squares.
+     * @data
+     *                   Array of doubles holding the x and y values in [i][0] and [j][1] respectively
+     *
+     * @fit
+     *                  The the least squares fit as an array of doubles
+     * @return
+     *                  Standard error in mean as a double value
+     *
+     */
+    public static double standardError(double[][] data, double[] fit){
         double rss = 0.0; //standard error in mean i.e. residual sum of squares
         for (int i = 0; i < data.length; i++)
             rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
