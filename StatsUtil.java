@@ -1,9 +1,9 @@
 /*
- *	StatsUtil.java
- *  ==============
+ * StatsUtil.java
+ * ==============
  *
- *  This file is a part of a program which serves as a utility for data analysis
- *  of experimental data
+ * This file is a part of a program which serves as a utility for data analysis
+ * of experimental data
  *
  * Copyright (C) 2013-2014  Magdalen Berns <m.berns@sms.ed.ac.uk>
  *
