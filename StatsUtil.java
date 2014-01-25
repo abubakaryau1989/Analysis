@@ -1,6 +1,6 @@
 /*
- *		StatsUtil.java
- *  	==============
+ *	StatsUtil.java
+ *  ==============
  *
  *  This file is a part of a program which serves as a utility for data analysis
  *  of experimental data
@@ -22,41 +22,42 @@ import java.io.PrintWriter;
 
 public class StatsUtil{
 
+    /**
+     * mean
+     *                   Works out the fit of the data
+     * @param data
+     *                   Array of doubles holding the x and y values in [i][0] and [j][1] respectively
+     *
+     * @return
+     *                  The covariance as a double giving the fit difference of least squares
+     */
     public static double mean(double[] data){
-
         double sum = 0.0;
-        for(int i=0;i<data.length;i++){
-
-            sum += data[i];
-        }
-        return sum / (double) data.length;
+        for(int i=0;i< data.length; i++) sum += data[i];
+        return sum / (double) data.length - 1;
     }
 
     /**
-     * fit
+     * covariance
      *                   Works out the fit of the data
      * @param xVariance
      *                   Array of doubles holding the x variance values
      * @param yVariance
      *                   Array of doubles holding the y variance values
      * @param data
-     *                  Array of doubles holding the x and y values in [i][0] and [j][1] respectively
+     *                   Array of doubles holding the x and y values in [i][0] and [j][1] respectively
      *
      * @return
      *                  The covariance as a double giving the fit difference of least squares
      */
     public static double covariance(double xVariance, double yVariance, double[][] data){
-
         double covariance=0.0;
-        //works out the difference of least squares fit
-        for (int i = 0; i < data.length; i++) {
-            covariance += (data[i][0] - xVariance) * (data[i][1] - yVariance);
-        }
+        for (int i = 0; i < data.length; i++) covariance += (data[i][0] - xVariance) * (data[i][1] - yVariance);
         return covariance;
     }
 
     /**
-     * fit
+     * covariance
      *                   Works out the fit of the data
      * @param xVariance
      *                   Array of doubles holding the x variance values
@@ -107,7 +108,7 @@ public class StatsUtil{
      *                   The integer length of the data array
      *
      * @return
-     *          The the standard deviation of least squares fit as a double
+     *                   The the standard deviation of least squares fit as a double
      *
      */
     public static double standardDeviation(double variance, int n){
@@ -229,7 +230,7 @@ public class StatsUtil{
      *                  as a double
      *
      */
-    public static double rss(double[] y, double[] fit){
+    public static double standardError(double[] y, double[] fit){
 
         double rss = 0.0;
         for (int i = 0; i < y.length; i++)
@@ -314,15 +315,22 @@ public class StatsUtil{
         double sVariance = (sigma / xVariance);
         return Math.sqrt( sigma / n + Math.pow(xMean,2) * sVariance);
     }
-    //Gives the error in the gradient
+
+    /**
+     * errorGradient
+     *                  Gives the error in the gradient
+     * @param xVariance
+     *                  Double holding the value of the variance in x
+     * @param rss
+     *                  Standard error in the mean of x
+     */
     public static double errorGradient(double xVariance, double rss, int n){
-
-        double degreesFreedom=n-2;
-        double stdVar = rss / degreesFreedom;
-        return Math.sqrt(stdVar/ xVariance);
+        double degreesFreedom = n - 2;
+        double stdVariance = rss / degreesFreedom;
+        return Math.sqrt(stdVariance/ xVariance);
     }
-    public static double errorFit(double stdFit){
 
+    public static double errorFit(double stdFit){ // TODO Check: forgotten what this is about!?!
         return Math.sqrt(stdFit);
     }
 }
