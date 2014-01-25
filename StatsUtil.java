@@ -145,6 +145,22 @@ public class StatsUtil{
             fit[i] = gradient*data[i][0] + offset;
         return fit;
     }
+
+    /**
+     * fit
+     *                   Works out the fit of the data
+     * @x
+     *                   Array of doubles holding the x values 
+     *
+     * @gradient
+     *                  The gradient
+     * @offset
+     *                  The offset constant value on the y axis
+     *
+     * @return
+     *                  The the least squares fit as an array of doubles
+     *
+     */
     public static double[] fit(double[] x, double gradient, double offset){
         double[] fit=new double[x.length];
         for(int i=0; i<x.length; i++)
