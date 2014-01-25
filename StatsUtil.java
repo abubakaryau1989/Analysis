@@ -1,4 +1,4 @@
-/*
+/**
  * StatsUtil.java
  * ==============
  *
@@ -73,9 +73,7 @@ public class StatsUtil{
      */
     public static double covariance(double xVariance, double yVariance, double[] x, double[] y){
         double covariance=0.0;
-        for (int i = 0; i < x.length; i++) {
-            covariance += (x[i] - xVariance) * (y[i] - yVariance);
-        }
+        for (int i = 0; i < x.length; i++) covariance += (x[i] - xVariance) * (y[i] - yVariance);
         return covariance;
     }
 
@@ -89,13 +87,10 @@ public class StatsUtil{
      *
      * @return
      *          The sum of all the variances
-     *
      */
     public static double variance(double[] data, double mean){
         double variance=0.0;
-        for (int i = 0; i < data.length; i++){
-            variance += Math.pow((data[i] - mean),2);
-        }
+        for (int i = 0; i < data.length; i++) variance += Math.pow((data[i] - mean),2);
         return variance/data.length;
     }
 
@@ -109,13 +104,10 @@ public class StatsUtil{
      *
      * @return
      *                   The the standard deviation of least squares fit as a double
-     *
      */
     public static double standardDeviation(double variance, int n){
         double stdDev= 0.0;
-        if(n > 0){
-            stdDev = Math.sqrt(variance / n);
-        }
+        if(n > 0) stdDev = Math.sqrt(variance / n);
         return stdDev;
     }
 
@@ -126,13 +118,10 @@ public class StatsUtil{
      *                   The covariance of the data being analysed
      * @param xVariance
      *                   The integer length of the data array
-     *
      * @return
      *          The the standard deviation of least squares fit as a double
-     *
      */
     public static double gradient(double covariance, double xVariance){
-
         return covariance / xVariance;
     }
 
@@ -145,10 +134,8 @@ public class StatsUtil{
      *                   The mean value of the y coordinate of the data being analysed
      * @gradient
      *                  The gradient
-     *
      * @return
      *          The the standard deviation of least squares fit as a double
-     *
      */
     public static double yIntercept(double xMean, double yMean, double gradient){
         return yMean - gradient * xMean;
@@ -159,15 +146,12 @@ public class StatsUtil{
      *                   Works out the fit of the data
      * @param data
      *                   Array of doubles holding the x and y values in [i][0] and [j][1] respectively
-     *
      * @param gradient
      *                  The gradient
      * @param offset
      *                  The offset constant value on the y axis
-     *
      * @return
      *                  The the least squares fit as an array of doubles
-     *
      */
     public static double[] fit(double[][] data, double gradient, double offset){
         double[] fit=new double[data.length];
@@ -181,20 +165,16 @@ public class StatsUtil{
      *                   Works out the fit of the data
      * @param x
      *                   Array of doubles holding the x values
-     *
      * @param gradient
      *                  The gradient
      * @param offset
      *                  The offset constant value on the y axis
-     *
      * @return
      *                  The the least squares fit as an array of doubles
-     *
      */
     public static double[] fit(double[] x, double gradient, double offset){
         double[] fit=new double[x.length];
-        for(int i=0; i<x.length; i++)
-            fit[i] = gradient*x[i] + offset;
+        for(int i = 0; i < x.length; i++) fit[i] = gradient*x[i] + offset;
         return fit;
     }
 
@@ -203,17 +183,14 @@ public class StatsUtil{
      *                  Gives the residual sum of squares.
      * @param data
      *                  Array of doubles holding the x and y values in [i][0] and [j][1] respectively
-     *
      * @param fit
      *                  The the least squares fit as an array of doubles
      * @return
-     *                  Standard error in mean as a double value
-     *
+     *                  Standard error in mean of y as a double value
      */
     public static double standardError(double[][] data, double[] fit){
         double rss = 0.0; //standard error in mean i.e. residual sum of squares
-        for (int i = 0; i < data.length; i++)
-            rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
+        for (int i = 0; i < data.length; i++) rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
         return rss;
     }
 
@@ -228,7 +205,6 @@ public class StatsUtil{
      * @return
      *                  Standard error in mean i.e. residual sum of squares
      *                  as a double
-     *
      */
     public static double standardError(double[] y, double[] fit){
 
@@ -241,7 +217,6 @@ public class StatsUtil{
     /**
      * regressionSOS
      *                  Regression sum of squares
-     *
      * @param fit
      *                  The the least squares fit as an array of doubles
      * @param yMean
@@ -256,8 +231,8 @@ public class StatsUtil{
     }
 
     /**
-     * regressionSOS
-     *                  Regression sum of squares
+     * residuals
+     *                  Difference between y from the least squares fit and the actual data
      * @param y
      *                  Array of doubles holding the y values
      * @param fit
@@ -268,9 +243,8 @@ public class StatsUtil{
     public static double[] residuals(double[] y, double[] fit){
 
         double[] residuals=new double[y.length];
-        for (int i = 0; i < y.length; i++){
+        for (int i = 0; i < y.length; i++)
             residuals[i] = y[i] - fit[i];
-        }
         return residuals;
     }
 
@@ -278,18 +252,13 @@ public class StatsUtil{
      * linearCorrelationCoefficient
      *                              Linear correlation coefficient found when we calculate the regression sum of
      *                              squares over the variance given in y
-     *
      * @param regressionSumOfSquares
      *                              Standard error of mean from having calculated the regression sum of squares
-     *
-     *
-     *
      * @param yVariance
      *                              Variance in y as an array of double values
 
      * @return
      *                              Linear correlation coefficient of data as a double
-     *
      */
 
     public static double linearCorrelationCoefficient(double regressionSumOfSquares, double yVariance){
@@ -307,7 +276,8 @@ public class StatsUtil{
      *              Array of doubles holding the mean x values
      * @param rss
      *              The regression sum of squares as a double
-     *
+     * @return
+     *              Error in the y offset constant value of the line of best fit as a double
      */
     public static double errorOffset(double n, double xVariance, double xMean, double rss) {
         double degreesFreedom = n - 2;  //Assumes that data has only 2 degrees of freedom.
@@ -323,6 +293,8 @@ public class StatsUtil{
      *                  Double holding the value of the variance in x
      * @param rss
      *                  Standard error in the mean of x
+     * @return
+     *                  Error in the line of best fit's gradient calculation as a double
      */
     public static double errorGradient(double xVariance, double rss, int n){
         double degreesFreedom = n - 2;
