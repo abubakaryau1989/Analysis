@@ -204,23 +204,56 @@ public class StatsUtil{
             rss += (fit[i] - data[i][1]) * (fit[i] - data[i][1]);
         return rss;
     }
-    // Residual Sum of Squares.
+
+    /**
+     * standardError
+     *                  Gives the residual sum of squares.
+     * @param y
+     *                  Array of doubles holding the y values
+     *
+     * @param fit
+     *                  The the least squares fit as an array of doubles
+     * @return
+     *                  Standard error in mean i.e. residual sum of squares
+     *                  as a double
+     *
+     */
     public static double rss(double[] y, double[] fit){
 
-        double rss = 0.0; //standard error in mean i.e. residual sum of squares
+        double rss = 0.0;
         for (int i = 0; i < y.length; i++)
             rss += (fit[i] - y[i]) * (fit[i] - y[i]);
         return rss;
     }
-    //Regression sum of squares.
-    public static double ssr(double[] fit, double yMean){
 
-        double ssr = 0.0; // regression sum of squares
+    /**
+     * regressionSOS
+     *                  Regression sum of squares
+     *
+     * @param fit
+     *                  The the least squares fit as an array of doubles
+     * @param yMean
+     *                  Array of doubles holding the mean y values
+     * @return
+     *                  The regression sum of squares as a double
+     */
+    public static double regressionSumOfSquares(double[] fit, double yMean){
+        double ssr = 0.0;
         for (int i = 0; i < fit.length; i++){
             ssr += (fit[i] - yMean) * (fit[i] - yMean);
         }
         return ssr;
     }
+
+    /**
+     * regressionSOS
+     *                  Regression sum of squares
+     *
+     * @param fit
+     *                  The the least squares fit as an array of doubles
+     * @return
+     *                  Array of doubles holding the data's residual points
+     */
     public static double[] residuals(double[] y, double[] fit){
 
         double[] residuals=new double[y.length];
@@ -229,9 +262,9 @@ public class StatsUtil{
         }
         return residuals;
     }
-    //Returns the linear corrilation coefficient
-    public static double linearCC(double ssr, double yVariance){
-        return ssr/yVariance;
+
+    public static double linearCorrelationCoefficient(double regressionSumOfSquares, double yVariance){
+        return regressionSumOfSquares / yVariance;
     }
     //Assumes that data has only 2 degrees of freedom.
     //gives the error in the offset
