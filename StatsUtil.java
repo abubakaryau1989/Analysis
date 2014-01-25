@@ -5,7 +5,7 @@
  * This file is a part of a program which serves as a utility for data analysis
  * of experimental data
  *
- * Copyright (C) 2013-2014  Magdalen Berns <m.berns@sms.ed.ac.uk>
+ * Copyright (C) 2012-2014  Magdalen Berns <m.berns@sms.ed.ac.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
  */
 public class StatsUtil{
 
+    private static final double period = 2 * Math.PI;
     /**
      * mean
      *                   Works out the fit of the data
@@ -87,9 +88,9 @@ public class StatsUtil{
      *          The sum of all the variances
      */
     public static double variance(double[] data, double mean){
-        double variance=0.0;
+        double variance = 0.0;
         for (int i = 0; i < data.length; i++) variance += Math.pow((data[i] - mean),2);
-        return variance/data.length;
+        return variance/data.length -1;
     }
 
     /**
@@ -205,6 +206,7 @@ public class StatsUtil{
      *                  as a double
      */
     public static double standardError(double[] y, double[] fit){
+
         double rss = 0.0;
         for (int i = 0; i < y.length; i++)
             rss += (fit[i] - y[i]) * (fit[i] - y[i]);
@@ -238,6 +240,7 @@ public class StatsUtil{
      *                  Array of doubles holding the data's residual points
      */
     public static double[] residuals(double[] y, double[] fit){
+
         double[] residuals=new double[y.length];
         for (int i = 0; i < y.length; i++)
             residuals[i] = y[i] - fit[i];
@@ -300,5 +303,56 @@ public class StatsUtil{
 
     public static double errorFit(double stdFit){ // TODO Check: forgotten what this is about!?!
         return Math.sqrt(stdFit);
+    }
+
+   /**
+    * gaussian
+    *                         a normalised gaussian to reflect the distribution of the data 
+    * @param numberOfSamples
+    *                         sample number appropriate to size of original data array
+    * @param variance                    
+    *                         variance of data
+    * @param mean
+    *                         mean of data
+    * @return
+    *                         normalised gaussian in the form of 1D array of doubles for y axis
+    */
+    public static double[] gaussian(int numberOfSamples, double variance, double mean){
+        double[] gaussian = new double[numberOfSamples];
+        double tempGaussian= 0.0;
+
+        for (int i=0; i<numberOfSamples; i++){
+            gaussian[i] = Math.sqrt(1/(period)* variance)*(Math.exp(-(i-mean)*(i-mean)/(2 * variance)));
+            tempGaussian += gaussian[i];
+        }
+        
+        for (int i=0; i< numberOfSamples; i++){ //normalise
+            gaussian[i] /= tempGaussian;
+        }
+        return gaussian;
+    }
+
+    /**
+     * convolve
+     *                        convolve data with a normalised gaussian in order to smooth the output after
+     *                        reducing sample rate
+     * @param data
+     *                         2D data array to be smoothed
+     * @param gaussian
+     *                         normalised gaussian in the form of 1D array of doubles for y axis
+     * @param numberOfSamples
+     *                         sample number appropriate to size of original data array
+     * @return
+     *                        Smoothed data as array of doubles 
+     */ 
+    public static double[] convolve(int[] data, double[] gaussian, int numberOfSamples){
+        double convolved[] = new double[data.length - (numberOfSamples + 1)];
+        for (int i=0; i<convolved.length; i++){
+            convolved[i] = 0.0;  // Set all doubles to 0.
+            for (int j=i, k=0; j<i + numberOfSamples; j++, k++){
+                convolved[i] +=  data[j] * gaussian[k];
+            }
+        }
+        return convolved;
     }
 }
