@@ -1,5 +1,5 @@
 /*
- *	StatsUtil.java
+ *		StatsUtil.java
  *  	==============
  *
  *  This file is a part of a program which serves as a utility for data analysis
@@ -125,17 +125,18 @@ public class StatsUtil{
     }
 
     /**
-     * 
-     *                   Works out the offset of the data (i.e the constant value by which y is offset)
-     * @xMean
-     *                   The mean value of the x coordinate of the data being analysed
-     * @yMean
-     *                   The mean value of the y coordinate of the data being analysed
+     * fit
+     *                   Works out the fit of the data
+     * @data
+     *                   Array holding the x and y values in [i][0] and [0][j] respectively
+     *
      * @gradient
      *                  The gradient
+     * @offset
+     *                  The offset constant value on the y axis
      *
      * @return
-     *          The the standard deviation of least squares fit as a double
+     *                  The the least squares fit as an array of doubles
      *
      */
     public static double[] fit(double[][] data, double gradient, double offset){
